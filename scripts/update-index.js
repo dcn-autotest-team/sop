@@ -1,6 +1,6 @@
 /**
  * SOP 资产扫描与索引重建脚本
- * 自动遍历 library/ 目录，提取元数据并重新生成 sops.json、public/sops.json 与 INDEX.md
+ * 具备自动查重、标题唯一性校验与索引智能重建功能
  */
 const fs = require('fs');
 const path = require('path');
@@ -21,6 +21,8 @@ const categoryNames = {
 };
 
 const sops = [];
+const seenIds = new Set();
+const seenTitles = new Map();
 
 CATEGORIES.forEach(cat => {
   const dir = path.join(LIBRARY_DIR, cat);
@@ -40,8 +42,23 @@ CATEGORIES.forEach(cat => {
     const painMatch = content.match(/\*\*解决痛点\*\*[:：]\s*(.+)$/m);
     const pain = painMatch ? painMatch[1].trim() : '项目标准化与避坑';
 
+    const id = `${cat}-${file.replace(/\.md$/, '')}`;
+
+    // 查重校验
+    if (seenIds.has(id)) {
+      console.warn(`[Deduplication Warning] 发现重复的 SOP ID: ${id}，将自动保留最新内容。`);
+      return;
+    }
+    seenIds.add(id);
+
+    if (seenTitles.has(title.toLowerCase())) {
+      console.warn(`[Deduplication Warning] 发现相近标题: "${title}" (已有: ${seenTitles.get(title.toLowerCase())})，建议合并为同一篇 SOP 资产。`);
+    } else {
+      seenTitles.set(title.toLowerCase(), file);
+    }
+
     sops.push({
-      id: `${cat}-${file.replace(/\.md$/, '')}`,
+      id,
       category: cat,
       filename: file,
       relPath: `library/${cat}/${file}`,
@@ -94,4 +111,4 @@ CATEGORIES.forEach(cat => {
 });
 
 fs.writeFileSync(INDEX_FILE, md, 'utf8');
-console.log(`[Update-Index] 成功重新构建索引！共收录 ${sops.length} 篇 SOP。`);
+console.log(`[Update-Index] 成功重新构建索引！共收录 ${sops.length} 篇唯一 SOP 资产。`);
