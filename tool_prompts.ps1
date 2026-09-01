@@ -2,7 +2,7 @@ Add-Type -AssemblyName System.Windows.Forms
 Add-Type -AssemblyName System.Drawing
 
 $cmdFinish = @"
-帮我复盘沉淀刚才这个项目，提炼 0-1 步骤与避坑 Never/Always 铁律，格式化为 SOP 并直接提交推送到我的 GitHub 仓库 https://github.com/dcn-autotest-team/sop，更新 INDEX.md 和 sops.json。
+请阅读 https://dcn-autotest-team.github.io/sop/llms.txt 中的跨项目自动提交协议，帮我提炼刚才完成项目的 0-1 破局步骤与避坑 Never/Always 铁律，并在系统临时目录操作 https://github.com/dcn-autotest-team/sop.git 仓库，将 SOP 写入 library/ 对应分类，运行 node scripts/update-index.js 后直接 git push 推送到 GitHub，全程全自动完成，严禁让我手动复制！
 "@
 
 $cmdStart = @"
