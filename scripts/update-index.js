@@ -1,6 +1,6 @@
 /**
  * SOP 资产扫描与索引重建脚本
- * 具备自动查重、标题唯一性校验、演进时间线提取与索引智能重建功能
+ * 纯文字排版（无 emoji），具备自动查重、标题唯一性校验、演进时间线提取与索引智能重建功能
  */
 const fs = require('fs');
 const path = require('path');
@@ -13,11 +13,11 @@ const PUBLIC_SOPS_JSON_FILE = path.join(ROOT_DIR, 'public', 'sops.json');
 
 const CATEGORIES = ['frontend', 'backend', 'ai-agent', 'automation', 'general'];
 const categoryNames = {
-  'frontend': '🌐 前端与交互开发',
-  'backend': '⚙️ 后端与服务端',
-  'ai-agent': '🤖 AI 与 Agent 开发',
-  'automation': '🕷️ 自动化与脚本',
-  'general': '📦 综合与通用架构'
+  'frontend': '前端与交互开发',
+  'backend': '后端与服务端',
+  'ai-agent': 'AI 与 Agent 开发',
+  'automation': '自动化与脚本',
+  'general': '综合与通用架构'
 };
 
 const sops = [];
@@ -113,10 +113,10 @@ if (fs.existsSync(path.dirname(PUBLIC_SOPS_JSON_FILE))) {
   fs.writeFileSync(PUBLIC_SOPS_JSON_FILE, JSON.stringify(sops, null, 2), 'utf8');
 }
 
-// 写入 INDEX.md
-let md = `# 📚 SOP 知识资产总索引库 (Master Index)\n\n`;
-md += `> 本文件由 **SOP 引擎** 自动同步维护。每次沉淀新项目时自动追加，需要查阅时自动检索。\n`;
-md += `> 状态：🟢 运行中 | 收录总数：${sops.length} 篇 | 最近更新：${new Date().toLocaleDateString('zh-CN')}\n\n`;
+// 写入 INDEX.md (纯净无 emoji)
+let md = `# SOP 知识资产总索引库 (Master Index)\n\n`;
+md += `> 本文件由 SOP 引擎自动同步维护。每次沉淀新项目时自动追加，需要查阅时自动检索。\n`;
+md += `> 状态：正常 | 收录总数：${sops.length} 篇 | 最近更新：${new Date().toLocaleDateString('zh-CN')}\n\n`;
 md += `---\n\n## 快速检索导航\n\n`;
 md += `| 场景分类 | 目录路径 | 已收录资产数 | 涵盖核心技术栈 |\n`;
 md += `| :--- | :--- | :--- | :--- |\n`;
@@ -126,7 +126,7 @@ CATEGORIES.forEach(cat => {
   md += `| **${categoryNames[cat]}** | [\`library/${cat}/\`](./library/${cat}/) | ${count} | ${cat === 'ai-agent' ? 'LangChain, RAG, Tauri, Prompt工程, Agent工作流' : '标准生产实践'} |\n`;
 });
 
-md += `\n---\n\n## 🗂️ 已沉淀资产清单 (Assets Catalog)\n\n`;
+md += `\n---\n\n## 已沉淀资产清单 (Assets Catalog)\n\n`;
 
 CATEGORIES.forEach(cat => {
   const catSops = sops.filter(s => s.category === cat);
@@ -135,7 +135,7 @@ CATEGORIES.forEach(cat => {
     md += `*暂无资产，等待沉淀...*\n\n`;
   } else {
     catSops.forEach((sop, idx) => {
-      const historyCount = sop.timeline ? ` (📜 ${sop.timeline.length} 次修撰)` : '';
+      const historyCount = sop.timeline ? ` (${sop.timeline.length} 次修撰)` : '';
       md += `- **[${sop.category.toUpperCase()}-${String(idx + 1).padStart(3, '0')}] [${sop.title}](./${sop.relPath})**${historyCount}\n`;
       md += `  - **核心技术**：${sop.tech}\n`;
       md += `  - **解决痛点**：${sop.pain}\n`;
@@ -145,4 +145,4 @@ CATEGORIES.forEach(cat => {
 });
 
 fs.writeFileSync(INDEX_FILE, md, 'utf8');
-console.log(`[Update-Index] 成功重新构建索引！共收录 ${sops.length} 篇唯一 SOP 资产（包含完整演进时间线）。`);
+console.log(`[Update-Index] 成功重新构建索引！共收录 ${sops.length} 篇 SOP 资产。`);
