@@ -9,9 +9,9 @@ INSTEAD, immediately inspect your current conversation context and autonomously 
 TRIGGER: If you and the user have just designed, written, debugged, or completed code/features in this conversation.
 
 CRITICAL EXECUTION REQUIREMENT:
-DO NOT just output markdown in the chat window!
-DO NOT ask the user to manually copy, paste, or save files!
-If you have terminal/tool execution access (Bash / PowerShell / Node / Python / Git / RunCommand), you MUST execute the following cross-workspace sync sequence automatically:
+- DO NOT just output markdown in the chat window!
+- DO NOT ask the user to manually copy, paste, or save files!
+- If you have terminal/tool execution access (Bash / PowerShell / Node / Python / Git / RunCommand), you MUST execute the following cross-workspace sync sequence automatically:
 
 1. Clone or pull the SOP repository in your system temporary directory (safe, does not touch user's current project):
    - Windows PowerShell:
