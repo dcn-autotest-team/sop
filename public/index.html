@@ -12,7 +12,7 @@
   <style>
     /* ============================================================
        「账册」设计语言 —— 暖白纸底 · 墨字 · 朱印红点睛 · 衬线标题
-       兼顾移动端单手操作与高清晰排版
+       兼顾移动端单手操作与高清晰排版（纯净无 emoji）
        ============================================================ */
     :root {
       --paper: #f7f2e9;          /* 暖米纸底 */
@@ -358,7 +358,7 @@
     footer a { color: var(--seal-ink); text-decoration: none; border-bottom: 1px dashed rgba(176,58,46,.4); }
 
     /* ============================================================
-       📱 移动端自适应
+       移动端自适应
        ============================================================ */
     @media (max-width: 768px) {
       .nav { padding: 0 14px; height: 58px; }
@@ -425,10 +425,10 @@
   </header>
 
   <main>
-    <!-- 🤖 AI 友好自主识别协议模块 -->
+    <!-- AI 友好自主识别协议模块 -->
     <section class="ai-banner">
       <div class="ai-banner-head">
-        <span class="ai-banner-tag">🤖 AI 零门槛协议 (Zero-Prompt Protocol)</span>
+        <span class="ai-banner-tag">AI 零门槛协议 (Zero-Prompt Protocol)</span>
         <div class="ai-banner-links">
           <a href="./llms.txt" target="_blank">llms.txt</a>
           <a href="./sops.json" target="_blank">sops.json</a>
@@ -445,7 +445,7 @@
 
     <!-- 扉页 -->
     <section class="hero">
-      <span class="hero-badge">✦ 极简原则 — 复杂的全留给 Agent，你只用一句话</span>
+      <span class="hero-badge">极简原则 — 复杂的全留给 Agent，你只用一句话</span>
       <h2>彻底告别<em>复制粘贴</em>与本地服务器，<br>SOP 沉淀与注入全自动流转</h2>
       <p>项目已全部托管在 GitHub：任何 Agent 做完项目后，一句话即可自动把规范与避坑指南同步进仓库；新项目开工时，把仓库地址扔给新 Agent 即可完成历史经验对齐。</p>
       <div class="hero-stats">
@@ -465,21 +465,21 @@
       </div>
       <div class="cmd-grid">
         <div class="cmd finish">
-          <span class="cmd-tag">✅ 做完项目后 · 对 Agent 说</span>
+          <span class="cmd-tag">完工沉淀 · 对 Agent 说</span>
           <h3>一键自动沉淀到 GitHub 仓库</h3>
           <div class="cmd-code" id="codeFinish"></div>
-          <p class="cmd-hint">💡 <b>完全不用手动复制</b> — 带终端权限的 Agent 会自动在临时目录克隆更新并 git 推送到 GitHub。</p>
+          <p class="cmd-hint"><b>完全不用手动复制</b> — 带终端权限的 Agent 会自动在临时目录克隆更新并 git 推送到 GitHub。</p>
           <div class="cmd-actions">
             <button class="btn finish" onclick="copyCommand('finish')"><svg width="13" height="13" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M4 1.5C4 .67 4.67 0 5.5 0h7C13.33 0 14 .67 14 1.5v9c0 .83-.67 1.5-1.5 1.5h-7C4.67 12 4 11.33 4 10.5v-9ZM5.5 1a.5.5 0 0 0-.5.5v9a.5.5 0 0 0 .5.5h7a.5.5 0 0 0 .5-.5v-9a.5.5 0 0 0-.5-.5h-7ZM2 3.5v9c0 .83.67 1.5 1.5 1.5H12v1.5c0 .83-.67 1.5-1.5 1.5h-7A1.5 1.5 0 0 1 2 15.5v-11C2 3.67 2.67 3 3.5 3H4v.5Z"/></svg>复制完工沉淀指令</button>
           </div>
         </div>
         <div class="cmd start">
-          <span class="cmd-tag">🚀 新项目开工时 · 对新 Agent 说</span>
+          <span class="cmd-tag">开工对齐 · 对新 Agent 说</span>
           <h3>自动对齐历史最佳实践</h3>
           <div class="cmd-code" id="codeStart"></div>
-          <p class="cmd-hint">💡 <b>彻底解决没思路和返工</b> — 新 Agent 会读取对应 SOP，提前建立技术壁垒。</p>
+          <p class="cmd-hint"><b>彻底解决没思路和返工</b> — 新 Agent 会读取对应 SOP，提前建立技术壁垒。</p>
           <div class="cmd-actions">
-            <button class="btn start" onclick="copyCommand('start')"><svg width="13" height="13" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M4 1.5C4 .67 4.67 0 5.5 0h7C13.33 0 14 .67 14 1.5v9c0 .83-.67 1.5-1.5 1.5h-7C4.67 12 4 11.33 4 10.5v-9ZM5.5 1a.5.5 0 0 0-.5.5v9a.5.5 0 0 0 .5.5h7a.5.5 0 0 0 .5-.5v-9a.5.5 0 0 0-.5-.5h-7ZM2 3.5v9c0 .83.67 1.5 1.5 1.5H12v1.5c0 .83-.67 1.5-1.5 1.5h-7A1.5.5 0 0 1 2 15.5v-11C2 3.67 2.67 3 3.5 3H4v.5Z"/></svg>复制开工注入指令</button>
+            <button class="btn start" onclick="copyCommand('start')"><svg width="13" height="13" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M4 1.5C4 .67 4.67 0 5.5 0h7C13.33 0 14 .67 14 1.5v9c0 .83-.67 1.5-1.5 1.5h-7C4.67 12 4 11.33 4 10.5v-9ZM5.5 1a.5.5 0 0 0-.5.5v9a.5.5 0 0 0 .5.5h7a.5.5 0 0 0 .5-.5v-9a.5.5 0 0 0-.5-.5h-7ZM2 3.5v9c0 .83.67 1.5 1.5 1.5H12v1.5c0 .83-.67 1.5-1.5 1.5h-7A1.5 1.5 0 0 1 2 15.5v-11C2 3.67 2.67 3 3.5 3H4v.5Z"/></svg>复制开工注入指令</button>
           </div>
         </div>
       </div>
@@ -588,7 +588,7 @@
     let toastTimer;
     function showToast(msg, isError = false) {
       const t = document.getElementById('toast');
-      document.getElementById('toastMsg').textContent = (isError ? '⚠ ' : '✓ ') + msg;
+      document.getElementById('toastMsg').textContent = msg;
       t.style.borderLeftColor = isError ? '#b45309' : 'var(--seal)';
       t.classList.add('show');
       clearTimeout(toastTimer);
@@ -645,7 +645,7 @@
             <div class="card-top">
               <div class="card-badges">
                 <span class="badge ${esc(sop.category)}">${esc(CAT_LABEL[sop.category] || '综合')}</span>
-                <span class="timeline-tag-pill" title="该项目已历经 ${tlCount} 次迭代沉淀">📜 ${tlCount} 次修撰</span>
+                <span class="timeline-tag-pill" title="该项目已历经 ${tlCount} 次迭代沉淀">${tlCount} 次修撰</span>
               </div>
               <span class="card-date">${esc(d)}</span>
             </div>
@@ -668,7 +668,7 @@
       container.innerHTML = `
         <div class="state loading">
           <svg width="22" height="22" viewBox="0 0 16 16" fill="currentColor" class="spin" style="margin-bottom:8px"><path d="M13.65 2.35A8 8 0 1 0 15.7 8h-2.02A6 6 0 1 1 8 2c1.66 0 3.14.69 4.22 1.78L9.5 6H15V.5l-1.35 1.85Z"/></svg>
-          <p>正在从 GitHub 拉取最新 SOP…</p>
+          <p>正在从 GitHub 同步资产列表…</p>
         </div>`;
       try {
         let res = await fetch('./sops.json?t=' + Date.now());
@@ -708,7 +708,7 @@
         <div class="timeline-card">
           <div class="tl-header">
             <div class="tl-author-wrap">
-              <span class="tl-author">👤 ${esc(item.author || 'yanwh & AI Agent')}</span>
+              <span class="tl-author">${esc(item.author || 'yanwh & AI Agent')}</span>
               <span class="tl-tag">${esc(item.tag || '增量更新')}</span>
             </div>
             <span class="tl-time">${esc(item.date || '')}</span>
