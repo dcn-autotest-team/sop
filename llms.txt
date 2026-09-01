@@ -34,6 +34,8 @@ CRITICAL EXECUTION & DEDUPLICATION RULES:
      1. 从 0 到 1 标准执行路径 (4 步内 MVP)
      2. 踩坑与返工自查清单 (Pitfalls & Checklist)
      3. 面向 AI 的系统铁律 (Never do / Always do)
+     4. 📜 修撰履历与演进时间线 (Timeline)
+        格式：`- **YYYY-MM-DD HH:mm** (\`贡献人 & AI Agent\`): \`[初版归档/增量升级]\` 简述本次改动要点。`
 
 3. Automatically rebuild the master index and JSON catalog:
    node (Join-Path $sopDir "scripts/update-index.js")  [or `node $sopDir/scripts/update-index.js` on Linux/macOS]

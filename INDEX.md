@@ -26,12 +26,12 @@
 *暂无资产，等待沉淀...*
 
 ### 🤖 AI 与 Agent 开发 (`library/ai-agent/`)
-- **[AI-AGENT-001] [跨端 AI 原生桌面悬浮助手与视觉感知架构标准实现 (Tauri + Win32 + Vision LLM)](./library/ai-agent/desktop-tauri-vision-copilot-sop.md)**
-  - **核心技术**：TypeScript, Tauri (Rust), React, Win32 API, UI Automation, Vision LLM, CJK Myers Diff, DPAPI
-  - **解决痛点**：跨端桌面 AI 悬浮窗卡顿闪退、截屏旧帧污染与黑屏误判、视觉模型幻觉与方向识别混乱、跨进程文本安全投递、自动更新签名与私钥内存泄露等系统级工程难题。
-- **[AI-AGENT-002] [RAG 知识库检索与文档问答管道标准实现](./library/ai-agent/rag-knowledge-base-pipeline.md)**
+- **[AI-AGENT-001] [RAG 知识库检索与文档问答管道标准实现](./library/ai-agent/rag-knowledge-base-pipeline.md)** (📜 1 次修撰)
   - **核心技术**：Python, FastAPI, LangChain, Chroma/Milvus, OpenAI/Gemini Embeddings
   - **解决痛点**：项目标准化与避坑
+- **[AI-AGENT-002] [跨端 AI 原生桌面悬浮助手与视觉感知架构标准实现 (Tauri + Win32 + Vision LLM)](./library/ai-agent/desktop-tauri-vision-copilot-sop.md)** (📜 2 次修撰)
+  - **核心技术**：TypeScript, Tauri (Rust), React, Win32 API, UI Automation, Vision LLM, CJK Myers Diff, DPAPI
+  - **解决痛点**：跨端桌面 AI 悬浮窗卡顿闪退、截屏旧帧污染与黑屏误判、视觉模型幻觉与方向识别混乱、跨进程文本安全投递、自动更新签名与私钥内存泄露等系统级工程难题。
 
 ### 🕷️ 自动化与脚本 (`library/automation/`)
 *暂无资产，等待沉淀...*
