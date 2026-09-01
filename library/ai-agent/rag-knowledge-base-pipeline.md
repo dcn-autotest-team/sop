@@ -36,3 +36,10 @@
 1. **Never**：严禁在未配置降级策略（Fallback）的情况下直接做向量数据库全量查询。
 2. **Always**：所有向量化操作必须以 Batch（批处理，每次 50~100 条）方式执行，禁止单条同步循环请求。
 3. **Always**：接口输出必须包含引用来源（Citation/Source Document ID 与行号）。
+
+---
+
+## 4. 📜 修撰履历与演进时间线 (Timeline)
+
+- **2026-08-31 22:17** (`yanwh & Antigravity`)：`[初版归档]` 沉淀 RAG 知识库语义分块、双路召回（BM25 + Dense Vector）与防幻觉规约。
+

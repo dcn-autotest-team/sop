@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
   <title>SOP 誊录馆 — 云端资产与最佳实践库</title>
-  <meta name="description" content="AI 项目经验沉淀与最佳实践规约库。提供结构化 SOP、踩坑自查清单与防跑偏铁律，面向人类与 AI Agent 协同设计。">
+  <meta name="description" content="AI 项目经验沉淀与最佳实践规约库。提供结构化 SOP、演进时间线、踩坑自查清单与防跑偏铁律，面向人类与 AI Agent 协同设计。">
   <!-- AI Agent 自主抓取提示协议 -->
   <link rel="alternate" type="text/plain" href="./llms.txt" title="LLMs.txt Protocol">
   <link rel="alternate" type="application/json" href="./sops.json" title="SOP Catalog JSON">
@@ -85,7 +85,7 @@
 
     main { max-width: 1080px; margin: 0 auto; padding: 24px 16px 80px; display: flex; flex-direction: column; gap: 20px; }
 
-    /* ---------- AI 自动识别提示条（核心亮点） ---------- */
+    /* ---------- AI 友好自主识别协议模块 ---------- */
     .ai-banner {
       background: #2b2620; color: #f7f2e9; border-radius: 4px; padding: 18px 22px;
       border-left: 4px solid var(--seal); box-shadow: var(--shadow); position: relative;
@@ -233,7 +233,8 @@
       border: 1px solid rgba(176,58,46,.35); border-radius: 2px; transform: rotate(6deg);
     }
     .sop-card:hover { box-shadow: var(--shadow); transform: translateY(-2px); }
-    .card-top { display: flex; align-items: center; justify-content: space-between; }
+    .card-top { display: flex; align-items: center; justify-content: space-between; gap: 6px; }
+    .card-badges { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
     .badge {
       font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 2px;
       border: 1px solid; letter-spacing: .5px;
@@ -243,6 +244,11 @@
     .badge.backend   { color: var(--green); background: #e9efe4; border-color: #cddbc4; }
     .badge.automation{ color: #41576b; background: #e6ecf1; border-color: #c6d3dd; }
     .badge.general   { color: var(--ink-2); background: #f0ebe0; border-color: var(--line); }
+    
+    .timeline-tag-pill {
+      font-size: 10px; font-weight: 600; color: var(--seal-ink); background: var(--seal-soft);
+      padding: 1px 6px; border-radius: 2px; border: 1px dashed rgba(176,58,46,.3);
+    }
     .card-date { font-size: 10.5px; color: var(--ink-3); font-variant-numeric: tabular-nums; }
     .sop-card h3 { font-family: var(--serif); font-size: 14.5px; font-weight: 700; line-height: 1.45; padding-right: 22px; }
     .sop-card .pain { font-size: 12px; color: var(--ink-2); line-height: 1.6; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
@@ -274,20 +280,66 @@
     @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
     .modal {
       background: var(--paper-2); border-radius: 4px; box-shadow: 0 20px 60px -15px rgba(30,25,18,.6);
-      width: 100%; max-width: 780px; max-height: 90vh; display: flex; flex-direction: column; overflow: hidden;
+      width: 100%; max-width: 840px; max-height: 90vh; display: flex; flex-direction: column; overflow: hidden;
       animation: rise .2s ease; border: 1px solid var(--line);
     }
     @keyframes rise { from { transform: translateY(12px); opacity: 0; } to { transform: none; opacity: 1; } }
-    .modal-head { padding: 16px 20px; border-bottom: 2px solid var(--ink); display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+    .modal-head { padding: 16px 20px 0; border-bottom: 2px solid var(--ink); position: relative; }
+    .modal-head-top { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 12px; }
     .modal-head h3 { font-family: var(--serif); font-size: 16px; font-weight: 700; }
     .modal-head p { font-size: 11px; color: var(--ink-3); margin-top: 2px; }
-    .modal-close { width: 32px; height: 32px; border-radius: 3px; border: 1px solid var(--line); background: var(--paper-2); color: var(--ink-2); cursor: pointer; font-size: 14px; display: grid; place-items: center; }
+    .modal-close { width: 30px; height: 30px; border-radius: 3px; border: 1px solid var(--line); background: var(--paper-2); color: var(--ink-2); cursor: pointer; font-size: 14px; display: grid; place-items: center; }
     .modal-close:hover { background: var(--seal); border-color: var(--seal); color: #fff; }
+
+    .modal-tabs { display: flex; gap: 14px; margin-bottom: -2px; }
+    .modal-tab-btn {
+      background: none; border: none; font-size: 12.5px; font-weight: 600; font-family: inherit;
+      color: var(--ink-3); padding: 8px 6px; cursor: pointer; border-bottom: 2px solid transparent;
+      transition: all .15s; display: inline-flex; align-items: center; gap: 5px;
+    }
+    .modal-tab-btn:hover { color: var(--ink); }
+    .modal-tab-btn.active { color: var(--seal); border-bottom-color: var(--seal); font-weight: 700; }
+
     .modal-body {
       flex: 1; overflow: auto; padding: 18px 20px;
       background: #2e2a24; color: #ede5d4; font-family: var(--mono); font-size: 11.5px; line-height: 1.8;
       white-space: pre-wrap; word-break: break-word;
     }
+
+    /* ---------- 时间线展示组件 ---------- */
+    .timeline-view {
+      flex: 1; overflow: auto; padding: 22px 24px; background: var(--paper-2);
+    }
+    .timeline-container {
+      position: relative; padding-left: 24px; display: flex; flex-direction: column; gap: 20px;
+    }
+    .timeline-container::before {
+      content: ''; position: absolute; left: 7px; top: 8px; bottom: 8px; width: 2px;
+      background: var(--line);
+    }
+    .timeline-card {
+      position: relative; background: var(--paper); border: 1px solid var(--line);
+      border-radius: 4px; padding: 14px 16px; display: flex; flex-direction: column; gap: 6px;
+      box-shadow: 0 1px 4px rgba(0,0,0,.03);
+    }
+    .timeline-card::before {
+      content: ''; position: absolute; left: -24px; top: 16px; width: 9px; height: 9px;
+      border-radius: 50%; background: var(--seal); border: 2px solid var(--paper-2);
+      box-shadow: 0 0 0 1.5px var(--seal);
+    }
+    .tl-header { display: flex; align-items: center; justify-content: space-between; gap: 8px; flex-wrap: wrap; }
+    .tl-author-wrap { display: flex; align-items: center; gap: 6px; }
+    .tl-author {
+      font-size: 11px; font-weight: 700; color: var(--ink); background: var(--paper-deep);
+      padding: 2px 7px; border-radius: 3px; border: 1px solid var(--line);
+    }
+    .tl-tag {
+      font-size: 10.5px; font-weight: 700; color: var(--seal-ink); background: var(--seal-soft);
+      padding: 2px 6px; border-radius: 2px;
+    }
+    .tl-time { font-family: var(--mono); font-size: 11px; color: var(--ink-3); }
+    .tl-desc { font-size: 12px; color: var(--ink-2); line-height: 1.65; margin-top: 2px; }
+
     .modal-foot { padding: 12px 20px; border-top: 1px solid var(--line); display: flex; align-items: center; justify-content: space-between; gap: 8px; flex-wrap: wrap; }
     .modal-foot .note { font-size: 11px; color: var(--ink-3); }
 
@@ -306,7 +358,7 @@
     footer a { color: var(--seal-ink); text-decoration: none; border-bottom: 1px dashed rgba(176,58,46,.4); }
 
     /* ============================================================
-       📱 移动端针对性媒体查询与自适应排版 (Mobile Optimization)
+       📱 移动端自适应
        ============================================================ */
     @media (max-width: 768px) {
       .nav { padding: 0 14px; height: 58px; }
@@ -336,8 +388,9 @@
 
       .modal-mask { padding: 8px; }
       .modal { max-height: 94vh; }
-      .modal-head { padding: 14px 16px; }
+      .modal-head { padding: 14px 16px 0; }
       .modal-body { padding: 14px 16px; font-size: 11px; }
+      .timeline-view { padding: 16px 14px; }
       .modal-foot { padding: 10px 16px; }
       .modal-foot .btn { width: 100%; margin-top: 6px; }
 
@@ -372,7 +425,7 @@
   </header>
 
   <main>
-    <!-- 🤖 AI 友好自主识别协议模块 (只发网址即可自主行动) -->
+    <!-- 🤖 AI 友好自主识别协议模块 -->
     <section class="ai-banner">
       <div class="ai-banner-head">
         <span class="ai-banner-tag">🤖 AI 零门槛协议 (Zero-Prompt Protocol)</span>
@@ -415,7 +468,7 @@
           <span class="cmd-tag">✅ 做完项目后 · 对 Agent 说</span>
           <h3>一键自动沉淀到 GitHub 仓库</h3>
           <div class="cmd-code" id="codeFinish"></div>
-          <p class="cmd-hint">💡 <b>完全不用手动复制</b> — 带终端权限的 Agent（Antigravity / Cursor 等）会自动写文件并 git 推送到 GitHub。</p>
+          <p class="cmd-hint">💡 <b>完全不用手动复制</b> — 带终端权限的 Agent 会自动在临时目录克隆更新并 git 推送到 GitHub。</p>
           <div class="cmd-actions">
             <button class="btn finish" onclick="copyCommand('finish')"><svg width="13" height="13" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M4 1.5C4 .67 4.67 0 5.5 0h7C13.33 0 14 .67 14 1.5v9c0 .83-.67 1.5-1.5 1.5h-7C4.67 12 4 11.33 4 10.5v-9ZM5.5 1a.5.5 0 0 0-.5.5v9a.5.5 0 0 0 .5.5h7a.5.5 0 0 0 .5-.5v-9a.5.5 0 0 0-.5-.5h-7ZM2 3.5v9c0 .83.67 1.5 1.5 1.5H12v1.5c0 .83-.67 1.5-1.5 1.5h-7A1.5 1.5 0 0 1 2 15.5v-11C2 3.67 2.67 3 3.5 3H4v.5Z"/></svg>复制完工沉淀指令</button>
           </div>
@@ -426,7 +479,7 @@
           <div class="cmd-code" id="codeStart"></div>
           <p class="cmd-hint">💡 <b>彻底解决没思路和返工</b> — 新 Agent 会读取对应 SOP，提前建立技术壁垒。</p>
           <div class="cmd-actions">
-            <button class="btn start" onclick="copyCommand('start')"><svg width="13" height="13" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M4 1.5C4 .67 4.67 0 5.5 0h7C13.33 0 14 .67 14 1.5v9c0 .83-.67 1.5-1.5 1.5h-7C4.67 12 4 11.33 4 10.5v-9ZM5.5 1a.5.5 0 0 0-.5.5v9a.5.5 0 0 0 .5.5h7a.5.5 0 0 0 .5-.5v-9a.5.5 0 0 0-.5-.5h-7ZM2 3.5v9c0 .83.67 1.5 1.5 1.5H12v1.5c0 .83-.67 1.5-1.5 1.5h-7A1.5 1.5 0 0 1 2 15.5v-11C2 3.67 2.67 3 3.5 3H4v.5Z"/></svg>复制开工注入指令</button>
+            <button class="btn start" onclick="copyCommand('start')"><svg width="13" height="13" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M4 1.5C4 .67 4.67 0 5.5 0h7C13.33 0 14 .67 14 1.5v9c0 .83-.67 1.5-1.5 1.5h-7C4.67 12 4 11.33 4 10.5v-9ZM5.5 1a.5.5 0 0 0-.5.5v9a.5.5 0 0 0 .5.5h7a.5.5 0 0 0 .5-.5v-9a.5.5 0 0 0-.5-.5h-7ZM2 3.5v9c0 .83.67 1.5 1.5 1.5H12v1.5c0 .83-.67 1.5-1.5 1.5h-7A1.5.5 0 0 1 2 15.5v-11C2 3.67 2.67 3 3.5 3H4v.5Z"/></svg>复制开工注入指令</button>
           </div>
         </div>
       </div>
@@ -437,7 +490,7 @@
       <div class="panel-head" style="border-bottom:none;padding-bottom:10px">
         <div>
           <div class="panel-title"><span class="idx">贰</span>云端已沉淀的 SOP 资产库</div>
-          <div class="panel-sub">数据实时同步自 GitHub 官方仓库，手机/电脑随时调阅或复制</div>
+          <div class="panel-sub">数据实时同步自 GitHub 官方仓库，手机/电脑随时调阅演进履历与规约</div>
         </div>
       </div>
       <div class="toolbar">
@@ -462,19 +515,39 @@
 
   <footer>SOP 誊录馆 · 由 AGENTS_SOP 引擎自动维护 · <a href="https://github.com/dcn-autotest-team/sop" target="_blank">dcn-autotest-team/sop</a></footer>
 
-  <!-- 详情弹窗 -->
+  <!-- 详情弹窗（支持规约正文与演进时间线双视图） -->
   <div class="modal-mask" id="detailModal" onclick="if(event.target===this)closeDetailModal()">
     <div class="modal">
       <div class="modal-head">
-        <div>
-          <h3 id="modalTitle">SOP 详情</h3>
-          <p id="modalSub">查看完整规约</p>
+        <div class="modal-head-top">
+          <div>
+            <h3 id="modalTitle">SOP 详情</h3>
+            <p id="modalSub">查看完整规约</p>
+          </div>
+          <button class="modal-close" onclick="closeDetailModal()">✕</button>
         </div>
-        <button class="modal-close" onclick="closeDetailModal()">✕</button>
+        <div class="modal-tabs">
+          <button class="modal-tab-btn active" id="tabBtnDoc" onclick="switchModalTab('doc')">
+            <svg width="13" height="13" viewBox="0 0 16 16" fill="currentColor"><path d="M4 1h8a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2zm0 1a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V3a1 1 0 0 0-1-1H4z"/><path d="M5 4.5a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1-.5-.5zm0 3a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1-.5-.5zm0 3a.5.5 0 0 1 .5-.5h3a.5.5 0 0 1 0 1h-3a.5.5 0 0 1-.5-.5z"/></svg>
+            <span>规约正文 (AGENTS.md)</span>
+          </button>
+          <button class="modal-tab-btn" id="tabBtnTimeline" onclick="switchModalTab('timeline')">
+            <svg width="13" height="13" viewBox="0 0 16 16" fill="currentColor"><path d="M8 3.5a.5.5 0 0 0-1 0V9a.5.5 0 0 0 .252.434l3.5 2a.5.5 0 0 0 .496-.868L8 8.71V3.5z"/><path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16zm7-8A7 7 0 1 1 1 8a7 7 0 0 1 14 0z"/></svg>
+            <span id="tabTimelineText">演进履历 (时间线)</span>
+          </button>
+        </div>
       </div>
+
+      <!-- 规约 Markdown 视图 -->
       <div class="modal-body" id="modalBody"></div>
+
+      <!-- 演进时间线视图 -->
+      <div class="timeline-view" id="modalTimelineView" style="display:none">
+        <div class="timeline-container" id="timelineContainer"></div>
+      </div>
+
       <div class="modal-foot">
-        <span class="note">已对齐标准 AGENTS.md 规范</span>
+        <span class="note">已对齐标准 AGENTS.md 规范 · 纯静态安全托管</span>
         <div style="display:flex;gap:8px;width:100%;justify-content:flex-end">
           <button class="btn" style="background:var(--paper-deep);color:var(--ink);flex:none;border:1px solid var(--line)" onclick="closeDetailModal()">关闭</button>
           <button class="btn finish" style="flex:1;max-width:200px" onclick="copyCurrentModalContent()">复制 AGENTS.md</button>
@@ -491,6 +564,8 @@
     let currentSops = [];
     let activeCategory = 'all';
     let currentModalContent = '';
+    let currentModalSop = null;
+    let currentModalTab = 'doc';
 
     const COMMANDS = {
       finish: `请阅读 https://dcn-autotest-team.github.io/sop/llms.txt 中的跨项目自动提交协议，帮我提炼刚才完成项目的 0-1 破局步骤与避坑 Never/Always 铁律，并在系统临时目录操作 https://github.com/dcn-autotest-team/sop.git 仓库，将 SOP 写入 library/ 对应分类，运行 node scripts/update-index.js 后直接 git push 推送到 GitHub，全程全自动完成，严禁让我手动复制！`,
@@ -528,7 +603,7 @@
       copyToClipboard('https://dcn-autotest-team.github.io/sop/', '网址已复制！直接发给 AI 即可');
     }
 
-    /* ---- 渲染分类 tabs（带计数） ---- */
+    /* ---- 渲染分类 tabs ---- */
     function renderTabs() {
       const box = document.getElementById('categoryTabs');
       box.innerHTML = CATEGORIES.map(c => {
@@ -564,17 +639,21 @@
       container.innerHTML = list.map(sop => {
         const d = sop.updatedAt ? new Date(sop.updatedAt).toLocaleDateString('zh-CN') : '';
         const techs = (sop.tech || '').split(',').map(t => t.trim()).filter(Boolean).slice(0, 4);
+        const tlCount = sop.timeline ? sop.timeline.length : 1;
         return `
           <div class="sop-card">
             <div class="card-top">
-              <span class="badge ${esc(sop.category)}">${esc(CAT_LABEL[sop.category] || '综合')}</span>
+              <div class="card-badges">
+                <span class="badge ${esc(sop.category)}">${esc(CAT_LABEL[sop.category] || '综合')}</span>
+                <span class="timeline-tag-pill" title="该项目已历经 ${tlCount} 次迭代沉淀">📜 ${tlCount} 次修撰</span>
+              </div>
               <span class="card-date">${esc(d)}</span>
             </div>
             <h3>${esc(sop.title)}</h3>
             <p class="pain"><b>核心痛点：</b>${esc(sop.pain)}</p>
             <div class="tech-row">${techs.map(t => `<span class="tech-chip">${esc(t)}</span>`).join('')}</div>
             <div class="card-foot">
-              <button class="link-btn" onclick="openDetailModal('${esc(sop.id)}')">查看详情 →</button>
+              <button class="link-btn" onclick="openDetailModal('${esc(sop.id)}')">查看详情 / 履历 →</button>
               <button class="copy-btn" onclick="copySopAsAgentsMd('${esc(sop.id)}')">复制 AGENTS.md</button>
             </div>
           </div>`;
@@ -609,17 +688,54 @@
       }
     }
 
-    /* ---- 弹窗 ---- */
+    /* ---- 弹窗切换 ---- */
+    function switchModalTab(tab) {
+      currentModalTab = tab;
+      const isDoc = tab === 'doc';
+      document.getElementById('tabBtnDoc').classList.toggle('active', isDoc);
+      document.getElementById('tabBtnTimeline').classList.toggle('active', !isDoc);
+      document.getElementById('modalBody').style.display = isDoc ? 'block' : 'none';
+      document.getElementById('modalTimelineView').style.display = !isDoc ? 'block' : 'none';
+    }
+
+    function renderTimeline(timeline) {
+      const container = document.getElementById('timelineContainer');
+      if (!timeline || !timeline.length) {
+        container.innerHTML = `<div style="text-align:center;color:var(--ink-3);padding:24px 0">暂无演进记录</div>`;
+        return;
+      }
+      container.innerHTML = timeline.map(item => `
+        <div class="timeline-card">
+          <div class="tl-header">
+            <div class="tl-author-wrap">
+              <span class="tl-author">👤 ${esc(item.author || 'yanwh & AI Agent')}</span>
+              <span class="tl-tag">${esc(item.tag || '增量更新')}</span>
+            </div>
+            <span class="tl-time">${esc(item.date || '')}</span>
+          </div>
+          <div class="tl-desc">${esc(item.desc || '')}</div>
+        </div>
+      `).join('');
+    }
+
     function openDetailModal(id) {
       const sop = currentSops.find(s => s.id === id);
       if (!sop) return;
+      currentModalSop = sop;
       document.getElementById('modalTitle').textContent = sop.title;
       document.getElementById('modalSub').textContent = `${CAT_LABEL[sop.category] || sop.category} · ${sop.tech}`;
       document.getElementById('modalBody').textContent = sop.content;
       currentModalContent = sop.content;
+
+      const tlCount = sop.timeline ? sop.timeline.length : 1;
+      document.getElementById('tabTimelineText').textContent = `演进履历 (${tlCount} 次修订)`;
+      renderTimeline(sop.timeline || []);
+
+      switchModalTab('doc');
       document.getElementById('detailModal').classList.add('open');
       document.body.style.overflow = 'hidden';
     }
+
     function closeDetailModal() {
       document.getElementById('detailModal').classList.remove('open');
       document.body.style.overflow = '';
