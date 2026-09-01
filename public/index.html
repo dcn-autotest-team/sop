@@ -372,21 +372,21 @@
   </header>
 
   <main>
-    <!-- 🤖 AI 友好自主识别协议模块 (给网址就能自主行动，免复制粘贴) -->
+    <!-- 🤖 AI 友好自主识别协议模块 (只发网址即可自主行动) -->
     <section class="ai-banner">
       <div class="ai-banner-head">
-        <span class="ai-banner-tag">🤖 AI 友好协议 (Agent Protocol)</span>
+        <span class="ai-banner-tag">🤖 AI 零门槛协议 (Zero-Prompt Protocol)</span>
         <div class="ai-banner-links">
           <a href="./llms.txt" target="_blank">llms.txt</a>
           <a href="./sops.json" target="_blank">sops.json</a>
         </div>
       </div>
-      <h3>把本网页网址直接甩给任意 AI，它就能自主判断执行：</h3>
-      <p>无需你复制粘贴长篇大论！ChatGPT、Claude、Cursor、Antigravity 等任意具备联网或工具能力的 AI，打开本网址后即可通过读取 <a href="./llms.txt" target="_blank" style="color:#d4bda8;text-decoration:underline;">llms.txt</a> 协议自动识别是<strong>“新项目开工对齐”</strong>还是<strong>“项目完工沉淀”</strong>。</p>
+      <h3>极简操作：任何场景下，直接把网址甩给 AI 即可！</h3>
+      <p>无需记忆任何长篇大论！AI（Cursor、ChatGPT、Claude、Antigravity 等）在收到此链接后，会<strong>自动读取云端 <a href="./llms.txt" target="_blank" style="color:#d4bda8;text-decoration:underline;">llms.txt</a> 协议</strong>，自主判定是“开工查阅历史经验”还是“完工全自动推送到 GitHub”。</p>
       
       <div class="ai-box-prompt">
-        <code>请阅读 https://dcn-autotest-team.github.io/sop/，根据上下文自主对齐历史 SOP 或沉淀当前成果</code>
-        <button class="ai-copy-btn" onclick="copyAiQuickPrompt()">复制快捷网址指令</button>
+        <code>https://dcn-autotest-team.github.io/sop/</code>
+        <button class="ai-copy-btn" onclick="copyAiUrlOnly()">一键复制纯网址发给 AI</button>
       </div>
     </section>
 
@@ -524,9 +524,8 @@
       navigator.clipboard.writeText(text).then(() => showToast(msg))
         .catch(() => showToast('复制失败，请手动复制', true));
     }
-    function copyCommand(type) { copyToClipboard(COMMANDS[type], '指令已复制！直接发送给 AI 即可'); }
-    function copyAiQuickPrompt() {
-      copyToClipboard('请阅读 https://dcn-autotest-team.github.io/sop/，根据上下文自主对齐历史 SOP 或沉淀当前成果', '快捷网址指令已复制！直接甩给 AI 即可');
+    function copyAiUrlOnly() {
+      copyToClipboard('https://dcn-autotest-team.github.io/sop/', '网址已复制！直接发给 AI 即可');
     }
 
     /* ---- 渲染分类 tabs（带计数） ---- */
