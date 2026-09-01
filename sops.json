@@ -1,12 +1,23 @@
 [
   {
+    "id": "ai-agent-desktop-tauri-vision-copilot-sop",
+    "category": "ai-agent",
+    "filename": "desktop-tauri-vision-copilot-sop.md",
+    "relPath": "library/ai-agent/desktop-tauri-vision-copilot-sop.md",
+    "title": "跨端 AI 原生桌面悬浮助手与视觉感知架构标准实现 (Tauri + Win32 + Vision LLM)",
+    "tech": "TypeScript, Tauri (Rust), React, Win32 API, UI Automation, Vision LLM, CJK Myers Diff",
+    "pain": "项目标准化与避坑",
+    "content": "# SOP: 跨端 AI 原生桌面悬浮助手与视觉感知架构标准实现 (Tauri + Win32 + Vision LLM)\n\n> **编号**: SOP-AI-002  \n> **分类**: AI 与 Agent 开发 (`ai-agent`)  \n> **核心栈**: TypeScript, Tauri (Rust), React, Win32 API, UI Automation, Vision LLM, CJK Myers Diff  \n> **复用定位**: 适用于任何需要“桌面置顶悬浮窗 -> 屏幕高频截图/焦点感知 -> 视觉多模态模型理解 -> 跨进程文本/键鼠模拟投递”的系统级 AI Copilot 场景。\n\n---\n\n## 1. 从 0 到 1 标准执行路径 (0-to-1 SOP)\n\n1. **阶段 1：Tauri 原生无边框透明悬浮窗与穿透控制**\n   - 配置 `tauri.conf.json`：`alwaysOnTop: true`, `decorations: false`, `transparent: true`, `skipTaskbar: true`。\n   - 必须实现点击穿透（Click-through）与焦点获取的动态切换（Rust 层通过 `SetWindowLongPtr` 动态设置 `WS_EX_TRANSPARENT` 与 `WS_EX_LAYERED`）。\n2. **阶段 2：屏幕捕获与低延迟 IPC 管道**\n   - 屏幕截图逻辑下沉至 Rust 后端（使用 Windows Graphics Capture API 或 GDI+），严禁在前端用 Web API 截全屏。\n   - 截屏大图通过**共享内存或本地临时文件 URI/二进制流**传递给前端，禁止将 Base64 字符串直接丢进 Tauri IPC 事件管道（防止序列化性能骤降与丢包）。\n3. **阶段 3：视觉多模态 Prompt 构造与 ROI 裁剪**\n   - 截屏前先通过 UI Automation 获取当前焦点窗口/光标周围的 Bounding Box，做局部 ROI 区域裁剪。\n   - 针对 Vision LLM 构造双阶段 Prompt：先由模型输出结构化 JSON 定位目标与意图，再二次生成具体执行方案，降低幻觉率。\n4. **阶段 4：跨进程投递与 CJK 输入校验**\n   - 向第三方窗口投递文本时，禁用物理按键模拟（易丢失中文拼音输入法状态）。\n   - 优先采用剪贴板接力（`SetClipboardData` + `SendInput Ctrl+V`）或 UI Automation ValuePattern 注入，投递后触发 Myers Diff 校验目标窗口文本状态。\n\n---\n\n## 2. 踩坑与返工自查清单 (Pitfalls & Checklist)\n\n- [x] **踩坑 1：抗截屏旧帧与脏帧**  \n  *原因*：Windows DWM 合成器缓存未刷新时，立刻截屏会捕获到悬浮窗关闭前的残影。  \n  *解法*：隐藏悬浮窗后，调用 `DwmFlush()` 或微延迟 16ms（一帧时间）后再触发截屏。\n- [x] **踩坑 2：焦点漂移导致误捕获后台窗口**  \n  *原因*：用户点击悬浮窗瞬间，原激活窗口失去焦点（Active Window 变成了悬浮窗自身）。  \n  *解法*：在悬浮窗显示前常驻记录上一次的前台窗口句柄 `GetForegroundWindow()`，所有感知与投递均以此句柄为基准。\n- [x] **踩坑 3：大尺寸截屏导致 Tauri IPC 卡顿/内存暴涨**  \n  *原因*：前端渲染 4K 截屏 Base64 触发多次内存拷贝与垃圾回收。  \n  *解法*：Rust 截屏后降采样至适合 LLM 的分辨率（长边 ≤ 1568px），并转换为 WebP/JPEG 格式后返回。\n\n---\n\n## 3. 面向 AI 的系统铁律 (Agent Instructions)\n\n1. **Never**：严禁在前端渲染主线程直接解码或处理高频高分辨率原始 Bitmap 图像。\n2. **Never**：严禁在未记录原窗口句柄的前提下直接模拟全局键盘鼠标事件。\n3. **Always**：所有 Rust 与前端的自定义 IPC 事件必须使用强类型 `ts-rs` 或严格 TypeScript 契约对齐。\n4. **Always**：涉及剪贴板操作时，必须在读取和写入前保存用户原剪贴板内容并在操作完成后自动还原。\n",
+    "updatedAt": "2026-09-01T02:44:28.234Z"
+  },
+  {
     "id": "ai-agent-rag-knowledge-base-pipeline",
     "category": "ai-agent",
     "filename": "rag-knowledge-base-pipeline.md",
     "relPath": "library/ai-agent/rag-knowledge-base-pipeline.md",
     "title": "RAG 知识库检索与文档问答管道标准实现",
     "tech": "Python, FastAPI, LangChain, Chroma/Milvus, OpenAI/Gemini Embeddings",
-    "pain": "标准化流程",
+    "pain": "项目标准化与避坑",
     "content": "# SOP: RAG 知识库检索与文档问答管道标准实现\n\n> **编号**: SOP-AI-001  \n> **分类**: AI 与 Agent 开发  \n> **核心栈**: Python, FastAPI, LangChain, Chroma/Milvus, OpenAI/Gemini Embeddings  \n> **复用定位**: 任何需要“本地文档上传 -> 向量化 -> 相似度检索 -> 大模型增强生成”的业务场景\n\n---\n\n## 1. 从 0 到 1 标准执行路径 (0-to-1 SOP)\n1. **阶段 1：文档解析与清洗**\n   - 提取纯文本，过滤无效字符、乱码与过长连续换行。\n   - 规则：Markdown/PDF 保留标题层级元数据（Metadata: header_1, header_2）。\n2. **阶段 2：语义分块 (Chunking)**\n   - ChunkSize 控制在 500~800 tokens，Overlap 保持 10%~15%（防语义在切点被截断）。\n   - 严禁按纯物理字符硬切。\n3. **阶段 3：向量入库与混合检索 (Hybrid Retrieval)**\n   - 必须使用“语义向量相似度 (Dense) + BM25 关键词检索 (Sparse)”双路召回。\n   - 接入轻量 Rerank（重排序模型），取 Top-3 返回给 Prompt。\n4. **阶段 4：Prompt 组装与防幻觉注入**\n   - 明确限制模型：“仅根据以下检索到的上下文回答，若上下文未提及，请明确回复‘根据现有资料无法获知’”。\n\n---\n\n## 2. 踩坑与返工自查清单 (Pitfalls & Checklist)\n- [x] **踩坑 1：召回内容语义不连贯**  \n  *原因*：Chunk 切分太小，导致上下文主谓缺失。  \n  *解法*：使用 ParentDocumentRetriever 模式（切小块做检索索引，召回对应的大块整段）。\n- [x] **踩坑 2：专有名词或英文缩写搜不到**  \n  *原因*：Embedding 模型对生僻行业术语不敏感。  \n  *解法*：必须开启 BM25 关键词精确匹配作为兜底。\n\n---\n\n## 3. 面向 AI 的系统铁律 (Agent Instructions)\n1. **Never**：严禁在未配置降级策略（Fallback）的情况下直接做向量数据库全量查询。\n2. **Always**：所有向量化操作必须以 Batch（批处理，每次 50~100 条）方式执行，禁止单条同步循环请求。\n3. **Always**：接口输出必须包含引用来源（Citation/Source Document ID 与行号）。\n",
     "updatedAt": "2026-08-31T14:17:13.850Z"
   }

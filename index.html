@@ -493,8 +493,8 @@
     let currentModalContent = '';
 
     const COMMANDS = {
-      finish: `请帮我回顾刚才完成的项目，提炼出 0-1 破局步骤、踩坑避坑清单与面向后续 AI 的铁律，格式化为标准 SOP 并直接提交推送到我的 GitHub 仓库 https://github.com/dcn-autotest-team/sop 的 library/ 对应分类中，同时更新 INDEX.md 和 sops.json。`,
-      start: `本项目启动前，请先查阅我的 SOP 最佳实践仓库 https://github.com/dcn-autotest-team/sop 的 INDEX.md，阅读最匹配的历史规范，严格遵守其中的 0-1 路径、避坑清单与 Never/Always 约束进行开发。`
+      finish: `请阅读 https://dcn-autotest-team.github.io/sop/llms.txt 中的跨项目自动提交协议，帮我提炼刚才完成项目的 0-1 破局步骤与避坑 Never/Always 铁律，并在系统临时目录操作 https://github.com/dcn-autotest-team/sop.git 仓库，将 SOP 写入 library/ 对应分类，运行 node scripts/update-index.js 后直接 git push 推送到 GitHub，全程全自动完成，严禁让我手动复制！`,
+      start: `本项目启动前，请先阅读我的 SOP 最佳实践仓库 https://github.com/dcn-autotest-team/sop 的 INDEX.md，阅读最匹配的历史规范，严格遵守其中的 0-1 路径、避坑清单与 Never/Always 约束进行开发。`
     };
     document.getElementById('codeFinish').textContent = COMMANDS.finish;
     document.getElementById('codeStart').textContent = COMMANDS.start;
