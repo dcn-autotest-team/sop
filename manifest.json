@@ -1,0 +1,56 @@
+{
+  "name": "runbi-agent-engine",
+  "version": "1.0.0",
+  "description": "润笔端侧与Agent协同的自演化写作与改写系统 (基于WikiSkill三层架构)",
+  "base_url": "https://dcn-autotest-team.github.io/runbi-updates",
+  "wiki": {
+    "index": "wiki/index.md",
+    "logs": "wiki/logs.md",
+    "impact_tracker": "wiki/skill-impact.md",
+    "patterns": [
+      {
+        "id": "terminology",
+        "title": "行业与专业术语规范",
+        "file": "wiki/patterns/terminology.md"
+      },
+      {
+        "id": "anti-patterns",
+        "title": "反模式与套话规避清单",
+        "file": "wiki/patterns/anti-patterns.md"
+      },
+      {
+        "id": "tone-business",
+        "title": "职场得体与沟通语气准则",
+        "file": "wiki/patterns/tone-business.md"
+      }
+    ]
+  },
+  "active_skills": [
+    {
+      "id": "polish-brief",
+      "title": "精简凝练润色",
+      "file": "skills/polish-brief/SKILL.md",
+      "purpose": "skills/polish-brief/PURPOSE.md",
+      "target_scenarios": [
+        "im",
+        "chat",
+        "slack",
+        "dingtalk",
+        "feishu"
+      ]
+    },
+    {
+      "id": "polish-formal",
+      "title": "正式公文与汇报润色",
+      "file": "skills/polish-formal/SKILL.md",
+      "purpose": "skills/polish-formal/PURPOSE.md",
+      "target_scenarios": [
+        "email",
+        "report",
+        "doc",
+        "pr",
+        "proposal"
+      ]
+    }
+  ]
+}
