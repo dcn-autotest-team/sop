@@ -216,41 +216,65 @@
       transform: scale(.93);
     }
 
-    /* ---------- 推荐导流卡片：神州鲲泰 FDE (流光呼吸边框) ---------- */
+    /* ---------- 推荐导流卡片：神州鲲泰 FDE (流光呼吸边框 + 算力集群大图) ---------- */
     .fde-banner {
       background: linear-gradient(135deg, var(--paper-2), #fbf7ee);
       border: 1px solid rgba(176,58,46,.25);
-      border-radius: 6px; padding: 18px 22px; display: flex; align-items: center; justify-content: space-between;
-      gap: 16px; box-shadow: var(--shadow); position: relative; overflow: hidden;
+      border-radius: 6px; padding: 20px 24px; display: grid; grid-template-columns: 1fr 240px;
+      gap: 20px; align-items: center; box-shadow: var(--shadow); position: relative; overflow: hidden;
     }
     .fde-banner::before {
       content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 4px;
       background: linear-gradient(180deg, var(--seal), #e2847a, #b03a2e);
     }
-    .fde-banner-main { flex: 1; min-width: 0; }
+    .fde-banner-main { min-width: 0; }
     .fde-banner-tag {
       font-size: 10.5px; font-weight: 700; letter-spacing: 1px; color: var(--seal-ink);
       background: var(--seal-soft); border: 1px solid #e8c7c2;
       padding: 2px 8px; border-radius: 2px; display: inline-flex; align-items: center; gap: 4px; margin-bottom: 6px;
     }
     .fde-banner h3 {
-      font-family: var(--serif); font-size: 15.5px; font-weight: 700; color: var(--ink); letter-spacing: .5px;
+      font-family: var(--serif); font-size: 16px; font-weight: 700; color: var(--ink); letter-spacing: .5px;
       display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
     }
     .fde-banner h3 span {
       font-family: var(--mono); font-size: 12px; color: var(--seal); font-weight: 600;
     }
     .fde-banner p {
-      font-size: 12px; color: var(--ink-2); line-height: 1.65; margin-top: 5px;
+      font-size: 12px; color: var(--ink-2); line-height: 1.65; margin-top: 6px; margin-bottom: 12px;
     }
     .fde-banner-btn {
-      flex: none; display: inline-flex; align-items: center; gap: 6px;
+      display: inline-flex; align-items: center; gap: 6px;
       font-size: 12px; font-weight: 700; color: #fff; background: var(--seal);
-      padding: 9px 16px; border-radius: 4px; text-decoration: none;
+      padding: 9px 18px; border-radius: 4px; text-decoration: none;
       box-shadow: 0 3px 8px -2px rgba(176,58,46,.4); transition: all .15s ease;
       white-space: nowrap;
     }
     .fde-banner-btn:hover { filter: brightness(1.08); transform: translateY(-1px); }
+
+    .fde-banner-thumb {
+      border-radius: 6px; overflow: hidden; border: 1px solid rgba(176,58,46,.2);
+      box-shadow: 0 6px 18px -4px rgba(43,38,32,.25); background: #26221c; aspect-ratio: 16/9;
+    }
+    .fde-banner-thumb img {
+      width: 100%; height: 100%; display: block; object-fit: cover; transition: transform .4s ease;
+    }
+    .fde-banner:hover .fde-banner-thumb img {
+      transform: scale(1.04);
+    }
+
+    /* cmd 卡片内叙事插画 */
+    .cmd-thumb {
+      width: 100%; height: 125px; border-radius: 3px; overflow: hidden;
+      border: 1px solid var(--line); margin-bottom: 4px; background: #26221c;
+    }
+    .cmd-thumb img {
+      width: 100%; height: 100%; object-fit: cover; display: block;
+      transition: transform .4s ease;
+    }
+    .cmd:hover .cmd-thumb img {
+      transform: scale(1.05);
+    }
 
     main { max-width: 1080px; margin: 0 auto; padding: 24px 16px 80px; display: flex; flex-direction: column; gap: 20px; }
 
@@ -618,8 +642,9 @@
 
       main { padding: 14px 12px 70px; gap: 16px; }
 
-      .fde-banner { flex-direction: column; align-items: stretch; gap: 12px; padding: 16px; }
+      .fde-banner { grid-template-columns: 1fr; gap: 14px; padding: 16px; }
       .fde-banner-btn { justify-content: center; width: 100%; }
+      .fde-banner-thumb { order: -1; max-height: 160px; }
 
       .hero { grid-template-columns: 1fr; gap: 18px; padding: 20px 16px; }
       .hero h2 { font-size: 20px; line-height: 1.4; }
@@ -726,11 +751,14 @@
         <div class="fde-banner-tag">产业 AI 算力与生态推荐</div>
         <h3>神州鲲泰 FDE 开发者平台 <span>fde.shenzhoukuntai.com</span></h3>
         <p>面向企业业务场景的产业级 AI 落地与全栈算力基础设施。提供企业级 Token Plan、FDE 专属智算落地支持、SaaS / 专属 / 私有化交付方案，助力企业大模型与核心业务深度闭环。</p>
+        <a href="https://fde.shenzhoukuntai.com" target="_blank" rel="noopener noreferrer" class="fde-banner-btn" title="访问神州鲲泰 FDE 平台" onclick="trackEvent('click_fde_link', { position: 'featured_banner' })">
+          <span>访问神州鲲泰 FDE</span>
+          <svg width="13" height="13" viewBox="0 0 16 16" fill="currentColor"><path fill-rule="evenodd" d="M1 8a.5.5 0 0 1 .5-.5h11.793l-3.147-3.146a.5.5 0 0 1 .708-.708l4 4a.5.5 0 0 1 0 .708l-4 4a.5.5 0 0 1-.708-.708L13.293 8.5H1.5A.5.5 0 0 1 1 8z"/></svg>
+        </a>
       </div>
-      <a href="https://fde.shenzhoukuntai.com" target="_blank" rel="noopener noreferrer" class="fde-banner-btn" title="访问神州鲲泰 FDE 平台" onclick="trackEvent('click_fde_link', { position: 'featured_banner' })">
-        <span>访问神州鲲泰 FDE</span>
-        <svg width="13" height="13" viewBox="0 0 16 16" fill="currentColor"><path fill-rule="evenodd" d="M1 8a.5.5 0 0 1 .5-.5h11.793l-3.147-3.146a.5.5 0 0 1 .708-.708l4 4a.5.5 0 0 1 0 .708l-4 4a.5.5 0 0 1-.708-.708L13.293 8.5H1.5A.5.5 0 0 1 1 8z"/></svg>
-      </a>
+      <div class="fde-banner-thumb" title="神州鲲泰 FDE 智算与产业 AI 赋能底座">
+        <img src="./assets/fde-platform.jpg" alt="神州鲲泰 FDE 产业级智算与算力集群" loading="lazy">
+      </div>
     </section>
 
     <!-- 双口令 -->
@@ -743,6 +771,9 @@
       </div>
       <div class="cmd-grid">
         <div class="cmd finish">
+          <div class="cmd-thumb" title="AI Agent 完工经验凝练与沉淀">
+            <img src="./assets/cmd-finish.jpg" alt="AI Agent 经验沉淀入库画卷" loading="lazy">
+          </div>
           <span class="cmd-tag">完工沉淀 · 对 Agent 说</span>
           <h3>一键自动沉淀到 GitHub 仓库</h3>
           <div class="cmd-code" id="codeFinish"></div>
@@ -752,6 +783,9 @@
           </div>
         </div>
         <div class="cmd start">
+          <div class="cmd-thumb" title="AI Agent 开工对齐与经验继承">
+            <img src="./assets/cmd-start.jpg" alt="AI Agent 开工对齐与全息规约" loading="lazy">
+          </div>
           <span class="cmd-tag">开工对齐 · 对新 Agent 说</span>
           <h3>自动对齐历史最佳实践</h3>
           <div class="cmd-code" id="codeStart"></div>
