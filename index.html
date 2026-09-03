@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
   <title>SOP 誊录馆 — 云端资产与最佳实践库</title>
-  <meta name="description" content="AI 项目经验沉淀与最佳实践规约库。提供结构化 SOP、演进时间线、踩坑自查清单与防跑偏铁律，面向人类与 AI Agent 协同设计。">
+  <meta name="description" content="AI 项目经验沉淀与最佳实践规约库。提供结构化 SOP、多维标签、演进时间线、踩坑自查清单与防跑偏铁律，面向人类与 AI Agent 协同设计。">
   <!-- AI Agent 自主抓取提示协议 -->
   <link rel="alternate" type="text/plain" href="./llms.txt" title="LLMs.txt Protocol">
   <link rel="alternate" type="application/json" href="./sops.json" title="SOP Catalog JSON">
@@ -12,7 +12,7 @@
   <style>
     /* ============================================================
        「账册」设计语言 —— 暖白纸底 · 墨字 · 朱印红点睛 · 衬线标题
-       兼顾移动端单手操作与高清晰排版（纯净无 emoji，内置分页机制）
+       兼顾移动端单手操作与高清晰排版（多维标签体系 + 分页机制）
        ============================================================ */
     :root {
       --paper: #f7f2e9;          /* 暖米纸底 */
@@ -246,15 +246,17 @@
     .sop-card:hover { box-shadow: var(--shadow); transform: translateY(-2px); }
     .card-top { display: flex; align-items: center; justify-content: space-between; gap: 6px; }
     .card-badges { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+    
     .badge {
       font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 2px;
       border: 1px solid; letter-spacing: .5px;
     }
-    .badge.ai-agent  { color: var(--seal-ink); background: var(--seal-soft); border-color: #e8c7c2; }
-    .badge.frontend  { color: #7a5c16; background: #f5ecd7; border-color: #e8d9b0; }
-    .badge.backend   { color: var(--green); background: #e9efe4; border-color: #cddbc4; }
-    .badge.automation{ color: #41576b; background: #e6ecf1; border-color: #c6d3dd; }
-    .badge.general   { color: var(--ink-2); background: #f0ebe0; border-color: var(--line); }
+    .badge.ai-agent   { color: var(--seal-ink); background: var(--seal-soft); border-color: #e8c7c2; }
+    .badge.miniprogram{ color: #077940; background: #e6f6ee; border-color: #b7e8ce; }
+    .badge.frontend   { color: #7a5c16; background: #f5ecd7; border-color: #e8d9b0; }
+    .badge.backend    { color: var(--green); background: #e9efe4; border-color: #cddbc4; }
+    .badge.automation { color: #41576b; background: #e6ecf1; border-color: #c6d3dd; }
+    .badge.general    { color: var(--ink-2); background: #f0ebe0; border-color: var(--line); }
     
     .timeline-tag-pill {
       font-size: 10px; font-weight: 600; color: var(--seal-ink); background: var(--seal-soft);
@@ -265,7 +267,12 @@
     .sop-card .pain { font-size: 12px; color: var(--ink-2); line-height: 1.6; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
     .sop-card .pain b { color: var(--seal-ink); }
     .tech-row { display: flex; flex-wrap: wrap; gap: 5px; }
-    .tech-chip { font-family: var(--mono); font-size: 10px; background: transparent; color: var(--ink-2); padding: 2px 6px; border-radius: 2px; border: 1px dashed var(--line); }
+    .tech-chip {
+      font-family: var(--mono); font-size: 10.5px; background: transparent; color: var(--ink-2);
+      padding: 2px 7px; border-radius: 2px; border: 1px dashed var(--line); cursor: pointer;
+      transition: all .15s;
+    }
+    .tech-chip:hover { border-color: var(--seal); color: var(--seal-ink); background: var(--paper-deep); }
     .card-foot { margin-top: auto; padding-top: 10px; border-top: 1px dashed var(--line); display: flex; align-items: center; justify-content: space-between; }
     .link-btn { font-size: 11.5px; font-weight: 600; color: var(--ink-2); background: none; border: none; cursor: pointer; font-family: inherit; padding: 4px 0; }
     .link-btn:hover { color: var(--seal); }
@@ -497,7 +504,7 @@
       <p>项目已全部托管在 GitHub：任何 Agent 做完项目后，一句话即可自动把规范与避坑指南同步进仓库；新项目开工时，把仓库地址扔给新 Agent 即可完成历史经验对齐。</p>
       <div class="hero-stats">
         <div class="stat"><b id="statTotal">—<span class="u"> 篇</span></b><span>云端 SOP 资产</span></div>
-        <div class="stat"><b>5<span class="u"> 大类</span></b><span>覆盖技术领域</span></div>
+        <div class="stat"><b>6<span class="u"> 大类</span></b><span>覆盖技术领域</span></div>
         <div class="stat"><b>1<span class="u"> 句话</span></b><span>完成沉淀 / 对齐</span></div>
       </div>
     </section>
@@ -515,7 +522,7 @@
           <span class="cmd-tag">完工沉淀 · 对 Agent 说</span>
           <h3>一键自动沉淀到 GitHub 仓库</h3>
           <div class="cmd-code" id="codeFinish"></div>
-          <p class="cmd-hint"><b>完全不用手动复制</b> — 支持直推与无权限 Issue 自动合流，任何账号的 Agent 均可 100% 全自动沉淀入库。</p>
+          <p class="cmd-hint"><b>完全不用手动复制</b> — 支持直推与自愈 Fork PR，任何账号的 Agent 均可 100% 全自动沉淀入库。</p>
           <div class="cmd-actions">
             <button class="btn finish" onclick="copyCommand('finish')"><svg width="13" height="13" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M4 1.5C4 .67 4.67 0 5.5 0h7C13.33 0 14 .67 14 1.5v9c0 .83-.67 1.5-1.5 1.5h-7C4.67 12 4 11.33 4 10.5v-9ZM5.5 1a.5.5 0 0 0-.5.5v9a.5.5 0 0 0 .5.5h7a.5.5 0 0 0 .5-.5v-9a.5.5 0 0 0-.5-.5h-7ZM2 3.5v9c0 .83.67 1.5 1.5 1.5H12v1.5c0 .83-.67 1.5-1.5 1.5h-7A1.5 1.5 0 0 1 2 15.5v-11C2 3.67 2.67 3 3.5 3H4v.5Z"/></svg>复制完工沉淀指令</button>
           </div>
@@ -537,13 +544,13 @@
       <div class="panel-head" style="border-bottom:none;padding-bottom:10px">
         <div>
           <div class="panel-title"><span class="idx">贰</span>云端已沉淀的 SOP 资产库</div>
-          <div class="panel-sub">数据实时同步自 GitHub 官方仓库，手机/电脑随时调阅演进履历与规约</div>
+          <div class="panel-sub">数据实时同步自 GitHub 官方仓库，手机/电脑随时调阅多维标签、演进履历与规约</div>
         </div>
       </div>
       <div class="toolbar">
         <div class="search-wrap">
           <svg class="search-icon" width="14" height="14" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M11.74 10.33a7 7 0 1 0-1.41 1.41l3.46 3.47a1 1 0 0 0 1.42-1.42l-3.47-3.46ZM7 12A5 5 0 1 1 7 2a5 5 0 0 1 0 10Z"/></svg>
-          <input type="text" id="searchInput" class="search" oninput="filterSops()" placeholder="搜索技术栈、痛点、名称…">
+          <input type="text" id="searchInput" class="search" oninput="filterSops()" placeholder="搜索技术栈、标签、痛点、名称…">
         </div>
         <button class="refresh" onclick="fetchSopsFromGithub(this)">
           <svg width="13" height="13" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M13.65 2.35A8 8 0 1 0 15.7 8h-2.02A6 6 0 1 1 8 2c1.66 0 3.14.69 4.22 1.78L9.5 6H15V.5l-1.35 1.85Z"/></svg>
@@ -626,19 +633,20 @@
     let currentModalTab = 'doc';
 
     const COMMANDS = {
-      finish: `请阅读 https://dcn-autotest-team.github.io/sop/llms.txt 中的跨项目自动提交协议，帮我提炼刚才完成项目的 0-1 破局步骤与避坑 Never/Always 铁律，并在系统临时目录操作 https://github.com/dcn-autotest-team/sop.git 仓库，将 SOP 写入 library/ 对应分类，直接运行 scripts/auto-sync.ps1 或 auto-sync.sh（内置权限自愈：若无 direct push 权限将全自动执行 Fork -> 推送分支 -> 创建 PR），全程全自动闭环，严禁让我手动复制或中途停下来问我！`,
+      finish: `请阅读 https://dcn-autotest-team.github.io/sop/llms.txt 中的跨项目自动提交协议，帮我提炼刚才完成项目的 0-1 破局步骤与避坑 Never/Always 铁律，并在系统临时目录操作 https://github.com/dcn-autotest-team/sop.git 仓库，将 SOP 写入 library/ 对应分类，并在头部打上精准的 > **标签**:，直接运行 scripts/auto-sync.ps1 或 auto-sync.sh（内置权限自愈：若无 direct push 权限将全自动执行 Fork -> 推送分支 -> 创建 PR），全程全自动闭环，严禁让我手动复制或中途停下来问我！`,
       start: `本项目启动前，请先阅读我的 SOP 最佳实践仓库 https://github.com/dcn-autotest-team/sop 的 INDEX.md，阅读最匹配的历史规范，严格遵守其中的 0-1 路径、避坑清单与 Never/Always 约束进行开发。`
     };
     document.getElementById('codeFinish').textContent = COMMANDS.finish;
     document.getElementById('codeStart').textContent = COMMANDS.start;
 
     const CATEGORIES = [
-      { id: 'all',        label: '全部' },
-      { id: 'ai-agent',   label: 'AI / Agent' },
-      { id: 'frontend',   label: '前端开发' },
-      { id: 'backend',    label: '后端服务' },
-      { id: 'automation', label: '脚本自动化' },
-      { id: 'general',    label: '综合架构' }
+      { id: 'all',         label: '全部' },
+      { id: 'ai-agent',    label: '大模型与智能体' },
+      { id: 'miniprogram', label: '小程序与跨端' },
+      { id: 'frontend',    label: '前端与交互' },
+      { id: 'backend',     label: '后端与服务架构' },
+      { id: 'automation',  label: '脚本与自动化' },
+      { id: 'general',     label: '综合与系统架构' }
     ];
     const CAT_LABEL = Object.fromEntries(CATEGORIES.map(c => [c.id, c.label]));
 
@@ -683,11 +691,24 @@
       let list = currentSops;
       if (activeCategory !== 'all') list = list.filter(s => s.category === activeCategory);
       if (q) list = list.filter(s =>
-        s.title.toLowerCase().includes(q) || s.tech.toLowerCase().includes(q) ||
-        s.pain.toLowerCase().includes(q) || s.content.toLowerCase().includes(q));
+        s.title.toLowerCase().includes(q) ||
+        s.tech.toLowerCase().includes(q) ||
+        (s.tags && s.tags.some(t => t.toLowerCase().includes(q))) ||
+        s.pain.toLowerCase().includes(q) ||
+        s.content.toLowerCase().includes(q));
       
       filteredSops = list;
       renderPaginatedSops();
+    }
+
+    function filterByTag(tag, event) {
+      if (event) event.stopPropagation();
+      const input = document.getElementById('searchInput');
+      input.value = tag;
+      activeCategory = 'all';
+      renderTabs();
+      filterSops(true);
+      showToast(`已按标签【${tag}】筛选`);
     }
 
     function esc(s) { const d = document.createElement('div'); d.textContent = s ?? ''; return d.innerHTML; }
@@ -758,7 +779,7 @@
       }
       container.innerHTML = list.map(sop => {
         const d = sop.updatedAt ? new Date(sop.updatedAt).toLocaleDateString('zh-CN') : '';
-        const techs = (sop.tech || '').split(',').map(t => t.trim()).filter(Boolean).slice(0, 4);
+        const tags = (sop.tags && sop.tags.length) ? sop.tags : (sop.tech || '').split(',').map(t => t.trim()).filter(Boolean).slice(0, 4);
         const tlCount = sop.timeline ? sop.timeline.length : 1;
         return `
           <div class="sop-card">
@@ -771,7 +792,9 @@
             </div>
             <h3>${esc(sop.title)}</h3>
             <p class="pain"><b>核心痛点：</b>${esc(sop.pain)}</p>
-            <div class="tech-row">${techs.map(t => `<span class="tech-chip">${esc(t)}</span>`).join('')}</div>
+            <div class="tech-row">
+              ${tags.map(t => `<span class="tech-chip" onclick="filterByTag('${esc(t)}', event)" title="点击按此标签快速筛选">${esc(t)}</span>`).join('')}
+            </div>
             <div class="card-foot">
               <button class="link-btn" onclick="openDetailModal('${esc(sop.id)}')">查看详情 / 履历 →</button>
               <button class="copy-btn" onclick="copySopAsAgentsMd('${esc(sop.id)}')">复制 AGENTS.md</button>
@@ -788,7 +811,7 @@
       container.innerHTML = `
         <div class="state loading">
           <svg width="22" height="22" viewBox="0 0 16 16" fill="currentColor" class="spin" style="margin-bottom:8px"><path d="M13.65 2.35A8 8 0 1 0 15.7 8h-2.02A6 6 0 1 1 8 2c1.66 0 3.14.69 4.22 1.78L9.5 6H15V.5l-1.35 1.85Z"/></svg>
-          <p>正在从 GitHub 拉取最新 SOP…</p>
+          <p>正在从 GitHub 同步资产列表…</p>
         </div>`;
       try {
         let res = await fetch('./sops.json?t=' + Date.now());

@@ -1,7 +1,8 @@
 # SOP: 跨端 AI 原生桌面悬浮助手与视觉感知架构标准实现 (Tauri + Win32 + Vision LLM)
 
 > **编号**: SOP-AI-002  
-> **分类**: AI 与 Agent 开发 (`ai-agent`)  
+> **分类**: 大模型与智能体 (`ai-agent`)  
+> **标签**: 桌面端, Tauri, 视觉感知, Win32, Prompt工程  
 > **核心栈**: TypeScript, Tauri (Rust), React, Win32 API, UI Automation, Vision LLM, CJK Myers Diff, DPAPI  
 > **解决痛点**: 跨端桌面 AI 悬浮窗卡顿闪退、截屏旧帧污染与黑屏误判、视觉模型幻觉与方向识别混乱、跨进程文本安全投递、自动更新签名与私钥内存泄露等系统级工程难题。  
 > **复用定位**: 适用于任何需要“桌面置顶悬浮窗 -> 屏幕高频截图/焦点感知 -> 视觉多模态模型理解 -> 跨进程文本/键鼠模拟投递 -> 自动化协同”的系统级 AI Copilot 场景。
