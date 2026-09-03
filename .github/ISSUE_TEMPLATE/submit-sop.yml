@@ -1,0 +1,32 @@
+name: "📥 提交/沉淀新 SOP 资产"
+description: "通过 Issue 自动将项目经验与避坑规约并入 SOP 知识库"
+title: "SOP: [填写项目/架构名称]"
+labels: ["auto-sop"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        提交后，云端 GitHub Actions 机器人会自动解析本 Issue 并秒级合并入 `main` 分支及在线页面！
+  - type: textarea
+    id: sop_content
+    attributes:
+      label: "SOP 规约正文 (Markdown)"
+      description: "请粘贴标准的 SOP/AGENTS.md 正文"
+      placeholder: |
+        # SOP: 你的项目最佳实践名称
+        > **分类**: ai-agent (可选: frontend / backend / ai-agent / automation / general)
+        > **核心栈**: React, FastAPI, Docker...
+        > **解决痛点**: 解决了什么核心报错或返工...
+
+        ## 1. 从 0 到 1 标准执行路径 (0-to-1 SOP)
+        1. 步骤 1...
+        2. 步骤 2...
+
+        ## 2. 踩坑与返工自查清单 (Pitfalls & Checklist)
+        - [x] 踩坑 1: ...
+
+        ## 3. 面向 AI 的系统铁律 (Never do / Always do)
+        - **Never**: ...
+        - **Always**: ...
+    validations:
+      required: true
