@@ -12,7 +12,7 @@
   <style>
     /* ============================================================
        「账册」设计语言 —— 暖白纸底 · 墨字 · 朱印红点睛 · 衬线标题
-       兼顾移动端单手操作与高清晰排版（纯净无 emoji）
+       兼顾移动端单手操作与高清晰排版（纯净无 emoji，内置分页机制）
        ============================================================ */
     :root {
       --paper: #f7f2e9;          /* 暖米纸底 */
@@ -277,6 +277,39 @@
     }
     .copy-btn:hover { background: var(--seal); border-color: var(--seal); color: #fff; }
 
+    /* ---------- 分页导航栏 ---------- */
+    .pagination-bar {
+      display: flex; align-items: center; justify-content: space-between; gap: 12px;
+      padding: 14px 20px 18px; border-top: 1px dashed var(--line); flex-wrap: wrap;
+    }
+    .page-info {
+      font-size: 11.5px; color: var(--ink-3); font-family: var(--mono);
+    }
+    .page-controls {
+      display: flex; align-items: center; gap: 6px; flex-wrap: wrap;
+    }
+    .page-btn {
+      font-size: 11.5px; font-weight: 600; font-family: var(--mono);
+      color: var(--ink-2); background: var(--paper-2); border: 1px solid var(--line);
+      border-radius: 3px; padding: 5px 10px; cursor: pointer; transition: all .15s;
+      min-width: 32px; text-align: center;
+    }
+    .page-btn:hover:not(:disabled) {
+      color: var(--seal-ink); border-color: var(--seal); background: #fff;
+    }
+    .page-btn.active {
+      background: var(--seal); border-color: var(--seal); color: #fff; font-weight: 700;
+    }
+    .page-btn:disabled {
+      opacity: .35; cursor: not-allowed; border-color: var(--line-soft);
+    }
+    .page-btn.prev-next {
+      font-family: inherit; font-size: 11px; padding: 5px 10px;
+    }
+    .page-ellipsis {
+      font-family: var(--mono); font-size: 12px; color: var(--ink-3); padding: 0 4px;
+    }
+
     /* 空态 / 加载态 */
     .state { grid-column: 1/-1; text-align: center; padding: 48px 0; color: var(--ink-3); font-size: 12.5px; }
     .state.loading svg { animation: spin 1s linear infinite; }
@@ -397,6 +430,9 @@
       .tabs { padding: 10px 16px 0; }
       .grid { grid-template-columns: 1fr; padding: 14px 16px 16px; gap: 12px; }
 
+      .pagination-bar { padding: 12px 16px 16px; flex-direction: column; align-items: center; gap: 10px; }
+      .page-controls { justify-content: center; }
+
       .modal-mask { padding: 8px; }
       .modal { max-height: 94vh; }
       .modal-head { padding: 14px 16px 0; }
@@ -497,7 +533,7 @@
     </section>
 
     <!-- 资产登记簿 -->
-    <section class="panel">
+    <section class="panel" id="sopPanel">
       <div class="panel-head" style="border-bottom:none;padding-bottom:10px">
         <div>
           <div class="panel-title"><span class="idx">贰</span>云端已沉淀的 SOP 资产库</div>
@@ -515,11 +551,19 @@
         </button>
       </div>
       <div class="tabs" id="categoryTabs"></div>
+      
+      <!-- 卡片网格 -->
       <div class="grid" id="sopContainer">
         <div class="state loading">
           <svg width="22" height="22" viewBox="0 0 16 16" fill="currentColor" class="spin" style="margin-bottom:8px"><path d="M13.65 2.35A8 8 0 1 0 15.7 8h-2.02A6 6 0 1 1 8 2c1.66 0 3.14.69 4.22 1.78L9.5 6H15V.5l-1.35 1.85Z"/></svg>
           <p>正在从 GitHub 同步资产列表…</p>
         </div>
+      </div>
+
+      <!-- 分页栏 -->
+      <div class="pagination-bar" id="paginationBar" style="display:none">
+        <div class="page-info" id="pageInfo">共 0 篇资产 · 第 1 / 1 页</div>
+        <div class="page-controls" id="pageControls"></div>
       </div>
     </section>
   </main>
@@ -572,7 +616,10 @@
 
   <script>
     const GITHUB_RAW_BASE = 'https://raw.githubusercontent.com/dcn-autotest-team/sop/main/';
+    const PAGE_SIZE = 6; // 每页展示 6 篇 SOP
     let currentSops = [];
+    let filteredSops = [];
+    let currentPage = 1;
     let activeCategory = 'all';
     let currentModalContent = '';
     let currentModalSop = null;
@@ -625,21 +672,83 @@
 
     function switchCategory(cat) {
       activeCategory = cat;
+      currentPage = 1;
       renderTabs();
-      filterSops();
+      filterSops(true);
     }
 
-    function filterSops() {
+    function filterSops(resetPage = true) {
+      if (resetPage) currentPage = 1;
       const q = document.getElementById('searchInput').value.toLowerCase().trim();
       let list = currentSops;
       if (activeCategory !== 'all') list = list.filter(s => s.category === activeCategory);
       if (q) list = list.filter(s =>
         s.title.toLowerCase().includes(q) || s.tech.toLowerCase().includes(q) ||
         s.pain.toLowerCase().includes(q) || s.content.toLowerCase().includes(q));
-      renderSops(list);
+      
+      filteredSops = list;
+      renderPaginatedSops();
     }
 
     function esc(s) { const d = document.createElement('div'); d.textContent = s ?? ''; return d.innerHTML; }
+
+    /* ---- 分页核心渲染 ---- */
+    function renderPaginatedSops() {
+      const total = filteredSops.length;
+      const totalPages = Math.ceil(total / PAGE_SIZE) || 1;
+      if (currentPage > totalPages) currentPage = totalPages;
+      if (currentPage < 1) currentPage = 1;
+
+      const start = (currentPage - 1) * PAGE_SIZE;
+      const pageList = filteredSops.slice(start, start + PAGE_SIZE);
+
+      renderSops(pageList);
+      renderPaginationControls(total, totalPages);
+    }
+
+    function changePage(page) {
+      const totalPages = Math.ceil(filteredSops.length / PAGE_SIZE) || 1;
+      if (page < 1 || page > totalPages || page === currentPage) return;
+      currentPage = page;
+      renderPaginatedSops();
+      
+      const panel = document.getElementById('sopPanel');
+      if (panel) {
+        panel.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    }
+
+    function renderPaginationControls(total, totalPages) {
+      const bar = document.getElementById('paginationBar');
+      const info = document.getElementById('pageInfo');
+      const controls = document.getElementById('pageControls');
+
+      if (total === 0) {
+        bar.style.display = 'none';
+        return;
+      }
+      bar.style.display = 'flex';
+      info.textContent = `共 ${total} 篇资产 · 第 ${currentPage} / ${totalPages} 页`;
+
+      if (totalPages <= 1) {
+        controls.innerHTML = '';
+        return;
+      }
+
+      let html = '';
+      html += `<button class="page-btn prev-next" onclick="changePage(${currentPage - 1})" ${currentPage === 1 ? 'disabled' : ''}>← 上一页</button>`;
+
+      for (let i = 1; i <= totalPages; i++) {
+        if (i === 1 || i === totalPages || (i >= currentPage - 2 && i <= currentPage + 2)) {
+          html += `<button class="page-btn ${i === currentPage ? 'active' : ''}" onclick="changePage(${i})">${i}</button>`;
+        } else if (i === currentPage - 3 || i === currentPage + 3) {
+          html += `<span class="page-ellipsis">…</span>`;
+        }
+      }
+
+      html += `<button class="page-btn prev-next" onclick="changePage(${currentPage + 1})" ${currentPage === totalPages ? 'disabled' : ''}>下一页 →</button>`;
+      controls.innerHTML = html;
+    }
 
     function renderSops(list) {
       const container = document.getElementById('sopContainer');
@@ -679,7 +788,7 @@
       container.innerHTML = `
         <div class="state loading">
           <svg width="22" height="22" viewBox="0 0 16 16" fill="currentColor" class="spin" style="margin-bottom:8px"><path d="M13.65 2.35A8 8 0 1 0 15.7 8h-2.02A6 6 0 1 1 8 2c1.66 0 3.14.69 4.22 1.78L9.5 6H15V.5l-1.35 1.85Z"/></svg>
-          <p>正在从 GitHub 同步资产列表…</p>
+          <p>正在从 GitHub 拉取最新 SOP…</p>
         </div>`;
       try {
         let res = await fetch('./sops.json?t=' + Date.now());
@@ -688,7 +797,7 @@
         currentSops = await res.json();
         document.getElementById('statTotal').innerHTML = currentSops.length + '<span class="u"> 篇</span>';
         renderTabs();
-        filterSops();
+        filterSops(true);
         showToast(`已同步 ${currentSops.length} 篇 SOP 资产`);
       } catch (err) {
         console.error(err);
