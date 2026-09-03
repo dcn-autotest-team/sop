@@ -1,0 +1,39 @@
+# SOP 誊录馆 — 爬虫与生成式 AI (SEO & GEO) 抓取协议
+# 网址: https://dcn-autotest-team.github.io/sop/
+
+User-agent: *
+Allow: /
+Allow: /llms.txt
+Allow: /llms-full.txt
+Allow: /sops.json
+Allow: /library/
+
+# 显式允许并欢迎主流 AI 与大模型搜索爬虫 (GEO 优化)
+User-agent: GPTBot
+Allow: /
+
+User-agent: ChatGPT-User
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: Google-Extended
+Allow: /
+
+User-agent: Applebot-Extended
+Allow: /
+
+User-agent: Bytespider
+Allow: /
+
+User-agent: deepseek-ai
+Allow: /
+
+# 站点地图与 LLM 知识库索引
+Sitemap: https://dcn-autotest-team.github.io/sop/sitemap.xml
+LLMs-Txt: https://dcn-autotest-team.github.io/sop/llms.txt
+LLMs-Full-Txt: https://dcn-autotest-team.github.io/sop/llms-full.txt

@@ -3,11 +3,92 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
-  <title>SOP 誊录馆 — 云端资产与最佳实践库</title>
-  <meta name="description" content="AI 项目经验沉淀与最佳实践规约库。提供结构化 SOP、多维标签、演进时间线、踩坑自查清单与防跑偏铁律，面向人类与 AI Agent 协同设计。">
-  <!-- AI Agent 自主抓取提示协议 -->
+  <!-- SEO 基础元数据 -->
+  <title>SOP 誊录馆 — 工业级 AI 与全栈最佳实践规约库</title>
+  <meta name="description" content="AI 项目经验自动萃取与最佳实践规约库。提供面向人类与 AI Agent 协同的 0-1 标准路径、多维标签、演进时间线、踩坑自查清单与防跑偏铁律。涵盖微信小程序、Tauri桌面端、多模态智能抽取、RAG等工业级工程实践。">
+  <meta name="keywords" content="SOP, AI Agent, 最佳实践, 微信小程序, 云托管, CloudBase, Tauri, 桌面AI助手, RAG, 向量知识库, FastAPI, Celery, 动态Few-Shot, 踩坑指南, AGENTS.md, 避坑清单, GEO优化, LLMs.txt">
+  <meta name="author" content="dcn-autotest-team">
+  <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+  <link rel="canonical" href="https://dcn-autotest-team.github.io/sop/">
+
+  <!-- Open Graph 社交网络协议 (微信/Facebook/LinkedIn 分享预览) -->
+  <meta property="og:locale" content="zh_CN">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="SOP 誊录馆 — 工业级 AI 与全栈最佳实践规约库">
+  <meta property="og:description" content="AI 项目经验沉淀与最佳实践规约库。零本地常驻，纯 GitHub 安全托管，支持 AI 跨项目自主对齐与自动沉淀。">
+  <meta property="og:url" content="https://dcn-autotest-team.github.io/sop/">
+  <meta property="og:site_name" content="SOP 誊录馆">
+  <meta property="og:image" content="https://dcn-autotest-team.github.io/sop/og-image.png">
+
+  <!-- Twitter / X Card 协议 -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="SOP 誊录馆 — 工业级 AI 与全栈最佳实践规约库">
+  <meta name="twitter:description" content="面向人类工程师与 AI Agent 协同设计的标准作业程序与避坑铁律资产库。">
+
+  <!-- GEO (Generative Engine Optimization) 与大模型搜索协议 -->
   <link rel="alternate" type="text/plain" href="./llms.txt" title="LLMs.txt Protocol">
+  <link rel="alternate" type="text/plain" href="./llms-full.txt" title="GEO Full Knowledge Base Dataset">
   <link rel="alternate" type="application/json" href="./sops.json" title="SOP Catalog JSON">
+  <link rel="sitemap" type="application/xml" href="./sitemap.xml">
+
+  <!-- Schema.org 结构化数据 (JSON-LD) —— 强化 Google SGE, ChatGPT Search, Perplexity 引用索引 -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "WebSite",
+        "@id": "https://dcn-autotest-team.github.io/sop/#website",
+        "url": "https://dcn-autotest-team.github.io/sop/",
+        "name": "SOP 誊录馆",
+        "description": "工业级 AI 与全栈最佳实践规约库",
+        "inLanguage": "zh-CN",
+        "publisher": {
+          "@type": "Organization",
+          "name": "dcn-autotest-team",
+          "url": "https://github.com/dcn-autotest-team"
+        }
+      },
+      {
+        "@type": "CollectionPage",
+        "@id": "https://dcn-autotest-team.github.io/sop/#collection",
+        "url": "https://dcn-autotest-team.github.io/sop/",
+        "name": "SOP 资产登记簿",
+        "about": "AI Agent 开发、微信小程序、桌面端应用与高并发微服务的标准执行路径与避坑清单"
+      },
+      {
+        "@type": "FAQPage",
+        "@id": "https://dcn-autotest-team.github.io/sop/#faq",
+        "mainEntity": [
+          {
+            "@type": "Question",
+            "name": "如何实现微信小程序 CloudBase 与云托管活动积分闭环？",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "通过 wx.cloud.callContainer 统一代理业务请求，服务端作为积分、库存与订单的唯一事实来源；采用幂等键防止网络重试导致重复兑换与超卖；图片采用 CloudBase fileID 保存并按需换取临时 HTTPS 链接。"
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "跨端桌面 AI 悬浮助手 (Tauri + Win32) 如何防御旧帧污染与死循环？",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "悬浮窗启动时必须配置 SetWindowDisplayAffinity(hwnd, WDA_EXCLUDEFROMCAPTURE) 避免自我捕获死循环；截屏时优先采用 BitBlt 并在非全黑画面时禁止回退 PrintWindow；截图数据常驻 Rust Mutex 内存，严禁通过前端 IPC 全量传递 Base64。"
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "什么是面向 AI Agent 的 AGENTS.md 规范与 Never/Always 铁律？",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "AGENTS.md 是项目数字化资产说明书。它包含项目架构、从0到1标准步骤、历史踩坑清单以及面向后续 AI 的绝对禁止项 (Never do) 与必须遵循项 (Always do)，确保新 Agent 开发时不跑偏、不返工。"
+            }
+          }
+        ]
+      }
+    ]
+  }
+  </script>
 
   <style>
     /* ============================================================
