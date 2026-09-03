@@ -626,7 +626,7 @@
     let currentModalTab = 'doc';
 
     const COMMANDS = {
-      finish: `请阅读 https://dcn-autotest-team.github.io/sop/llms.txt 中的跨项目自动提交协议，帮我提炼刚才完成项目的 0-1 破局步骤与避坑 Never/Always 铁律，并在系统临时目录操作 https://github.com/dcn-autotest-team/sop.git 仓库，将 SOP 写入 library/ 对应分类，运行 node scripts/update-index.js 后直接 git push 推送到 GitHub（若无 direct push 权限，自动通过 gh issue create 或 GitHub Issue API 提交，由云端 CI 自动秒级合并），全程全自动完成，严禁让我手动复制！`,
+      finish: `请阅读 https://dcn-autotest-team.github.io/sop/llms.txt 中的跨项目自动提交协议，帮我提炼刚才完成项目的 0-1 破局步骤与避坑 Never/Always 铁律，并在系统临时目录操作 https://github.com/dcn-autotest-team/sop.git 仓库，将 SOP 写入 library/ 对应分类，直接运行 scripts/auto-sync.ps1 或 auto-sync.sh（内置权限自愈：若无 direct push 权限将全自动执行 Fork -> 推送分支 -> 创建 PR），全程全自动闭环，严禁让我手动复制或中途停下来问我！`,
       start: `本项目启动前，请先阅读我的 SOP 最佳实践仓库 https://github.com/dcn-autotest-team/sop 的 INDEX.md，阅读最匹配的历史规范，严格遵守其中的 0-1 路径、避坑清单与 Never/Always 约束进行开发。`
     };
     document.getElementById('codeFinish').textContent = COMMANDS.finish;
