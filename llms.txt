@@ -26,10 +26,19 @@ CRITICAL EXECUTION & AUTOMATION RULES:
    - Check $sopDir/library/<category>/ and $sopDir/sops.json for existing SOPs with similar tech stack or architecture.
    - [IF EXACT / HIGHLY SIMILAR THEME EXISTS]: DO NOT create duplicate files. INSTEAD, append new pitfall findings, refine 0-1 steps, or enrich code patterns directly in the existing .md file, then update its timestamp.
    - [IF NEW DOMAIN / ARCHITECTURE]: Create a new file "$sopDir/library/<category>/<slug>.md"
-     Categories: frontend | backend | ai-agent | automation | general
+     Categories (6 选 1):
+       - ai-agent    : 大模型、智能体、RAG、视觉多模态、Prompt工程
+       - miniprogram : 微信小程序、跨端移动应用、H5互动
+       - frontend    : Web 前端、UI组件库、数据可视化
+       - backend     : 后端服务、高并发微服务、数据库与分布式事务
+       - automation  : 脚本工具、爬虫、自动化测试、CI/CD流水线
+       - general     : 综合架构、企业工程规范、Monorepo
+     
      Ensure structure:
      # SOP: <Title>
-     > **分类**: <Category>
+     > **编号**: SOP-<CATEGORY_UPPER>-XXX
+     > **分类**: <CategoryName> (`<category>`)
+     > **标签**: [在标签池中自主打标 2-4 个，如: 微信小程序, 云托管, 数据库事务, 视觉感知, RAG, 动态Few-Shot, Docker, 爬虫等]
      > **核心栈**: <Tech>
      > **解决痛点**: <Pain>
      1. 从 0 到 1 标准执行路径 (4 步内 MVP)

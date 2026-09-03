@@ -1,7 +1,8 @@
 # SOP: 工业级垂直领域多模态单证智能抽取与微服务调度架构 (FastAPI + Celery + Dynamic Few-Shot + Qwen/DeepSeek)
 
 > **编号**: SOP-AI-003  
-> **分类**: AI 与 Agent 开发 (`ai-agent`)  
+> **分类**: 大模型与智能体 (`ai-agent`)  
+> **标签**: 多模态, 智能抽取, Celery, FastAPI, 动态Few-Shot  
 > **核心栈**: Python 3.11, FastAPI, Celery + Redis, PostgreSQL + SQLite, Qwen-VL / DeepSeek / SenseAudio LLM, Skill V3 Prompt Engineering, Dynamic Few-Shot In-Context Learning, Caddy 2 (TLS / Reverse Proxy), Docker Compose Cloud  
 > **解决痛点**: 垂直海运/国际货代单证格式非标杂乱、高并发下 LLM 空响应 `Expecting value: line 1 column 1` 异常中断、多租户 API 密钥计费与并发削峰、租户商业机密隔离与动态 Few-Shot 样本热生效、线上静态资源受境外 CDN 污染黑屏等系统级全栈工程难题。  
 > **复用定位**: 适用于任何“多源非标单证 (邮件正文/PDF/图片/Excel) -> 多模态预解析 -> 动态 Few-Shot 样本注入 -> LLM 结构化抽取 -> 规范化归一 (Normalizer) -> 异步削峰队列 -> 租户计费与数据飞轮闭环”的企业级大模型应用。

@@ -1,6 +1,6 @@
 /**
  * SOP 资产扫描与索引重建脚本
- * 纯文字排版（无 emoji），具备自动查重、标题唯一性校验、演进时间线提取与索引智能重建功能
+ * 支持 6 大主分类 + AI 自主多维标签体系（Tags Pool）+ 演进时间线提取
  */
 const fs = require('fs');
 const path = require('path');
@@ -11,13 +11,14 @@ const INDEX_FILE = path.join(ROOT_DIR, 'INDEX.md');
 const SOPS_JSON_FILE = path.join(ROOT_DIR, 'sops.json');
 const PUBLIC_SOPS_JSON_FILE = path.join(ROOT_DIR, 'public', 'sops.json');
 
-const CATEGORIES = ['frontend', 'backend', 'ai-agent', 'automation', 'general'];
+const CATEGORIES = ['ai-agent', 'miniprogram', 'frontend', 'backend', 'automation', 'general'];
 const categoryNames = {
-  'frontend': '前端与交互开发',
-  'backend': '后端与服务端',
-  'ai-agent': 'AI 与 Agent 开发',
-  'automation': '自动化与脚本',
-  'general': '综合与通用架构'
+  'ai-agent': '大模型与智能体',
+  'miniprogram': '小程序与跨端',
+  'frontend': '前端与交互',
+  'backend': '后端与服务架构',
+  'automation': '脚本与自动化',
+  'general': '综合与系统架构'
 };
 
 const sops = [];
@@ -42,6 +43,16 @@ CATEGORIES.forEach(cat => {
     const painMatch = content.match(/\*\*解决痛点\*\*[:：]\s*(.+)$/m);
     const pain = painMatch ? painMatch[1].trim() : '项目标准化与避坑';
 
+    // 提取多维标签 (Tags)
+    let tags = [];
+    const tagsMatch = content.match(/\*\*(?:标签|Tags?)\*\*[:：]\s*(.+)$/m);
+    if (tagsMatch) {
+      tags = tagsMatch[1].split(/[,，、/|]+/).map(t => t.trim()).filter(Boolean);
+    } else {
+      // 智能保底提取
+      tags = (tech || '').split(/[,，/]+/).map(t => t.trim()).filter(Boolean).slice(0, 4);
+    }
+
     const id = `${cat}-${file.replace(/\.md$/, '')}`;
 
     // 查重校验
@@ -65,7 +76,6 @@ CATEGORIES.forEach(cat => {
       lines.forEach(line => {
         const trimmed = line.trim();
         if (!trimmed.startsWith('-')) return;
-        // 匹配格式: - **2026-09-01 11:20** (`yanwh & Antigravity`)：`[增量升级]` 补充...
         const m = trimmed.match(/^-\s*\*\*([^*]+)\*\*\s*(?:\(([^)]+)\))?[：:]\s*(?:`?\[([^\]]+)\]`?)?\s*(.+)$/);
         if (m) {
           timeline.push({
@@ -78,7 +88,6 @@ CATEGORIES.forEach(cat => {
       });
     }
 
-    // 若无明确履历，则根据文件元数据生成初版记录
     const stat = fs.statSync(fullPath);
     if (timeline.length === 0) {
       timeline.push({
@@ -96,6 +105,7 @@ CATEGORIES.forEach(cat => {
       relPath: `library/${cat}/${file}`,
       title,
       tech,
+      tags,
       pain,
       content,
       timeline,
@@ -113,7 +123,7 @@ if (fs.existsSync(path.dirname(PUBLIC_SOPS_JSON_FILE))) {
   fs.writeFileSync(PUBLIC_SOPS_JSON_FILE, JSON.stringify(sops, null, 2), 'utf8');
 }
 
-// 写入 INDEX.md (纯净无 emoji)
+// 写入 INDEX.md
 let md = `# SOP 知识资产总索引库 (Master Index)\n\n`;
 md += `> 本文件由 SOP 引擎自动同步维护。每次沉淀新项目时自动追加，需要查阅时自动检索。\n`;
 md += `> 状态：正常 | 收录总数：${sops.length} 篇 | 最近更新：${new Date().toLocaleDateString('zh-CN')}\n\n`;
@@ -123,7 +133,7 @@ md += `| :--- | :--- | :--- | :--- |\n`;
 
 CATEGORIES.forEach(cat => {
   const count = sops.filter(s => s.category === cat).length;
-  md += `| **${categoryNames[cat]}** | [\`library/${cat}/\`](./library/${cat}/) | ${count} | ${cat === 'ai-agent' ? 'LangChain, RAG, Tauri, Prompt工程, Agent工作流' : '标准生产实践'} |\n`;
+  md += `| **${categoryNames[cat]}** | [\`library/${cat}/\`](./library/${cat}/) | ${count} | ${cat === 'ai-agent' ? 'LangChain, RAG, Tauri, Prompt工程, 多模态抽取' : cat === 'miniprogram' ? '微信小程序, CloudBase, 移动端' : '标准生产实践'} |\n`;
 });
 
 md += `\n---\n\n## 已沉淀资产清单 (Assets Catalog)\n\n`;
@@ -136,7 +146,8 @@ CATEGORIES.forEach(cat => {
   } else {
     catSops.forEach((sop, idx) => {
       const historyCount = sop.timeline ? ` (${sop.timeline.length} 次修撰)` : '';
-      md += `- **[${sop.category.toUpperCase()}-${String(idx + 1).padStart(3, '0')}] [${sop.title}](./${sop.relPath})**${historyCount}\n`;
+      const tagsText = sop.tags && sop.tags.length ? ` \`[${sop.tags.join(', ')}]\`` : '';
+      md += `- **[${sop.category.toUpperCase()}-${String(idx + 1).padStart(3, '0')}] [${sop.title}](./${sop.relPath})**${historyCount}${tagsText}\n`;
       md += `  - **核心技术**：${sop.tech}\n`;
       md += `  - **解决痛点**：${sop.pain}\n`;
     });
