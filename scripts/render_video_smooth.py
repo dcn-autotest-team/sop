@@ -56,7 +56,7 @@ SCENES = [
         "title": "一句话自动对齐历史工程规约",
         "sub_line1": "开工只需一句话，新 Agent 秒级对齐最佳实践",
         "sub_line2": "严格遵守 0-1 破局路径、避坑清单与开发铁律",
-        "voice_text": "告别繁琐文档！开工只需一句话，新 Agent 即可秒级对齐历史规约，严格遵守避坑清单与核心开发铁律。",
+        "voice_text": "告别繁琐文档！开工只需一句话，智能体即可秒级对齐历史规约，严格遵守避坑清单与开发铁律。",
         "motion_type": "pan_down_right" # 缓慢向全息蓝图微推移
     },
     {
@@ -66,7 +66,7 @@ SCENES = [
         "title": "一键萃取破局经验 · 秒级自愈入库",
         "sub_line1": "完工对 Agent 说一句话，自动提炼避坑铁律与 0-1 步骤",
         "sub_line2": "自动提交 PR 与云端自愈合并，全程无需手动复制",
-        "voice_text": "项目完工，同样只需一句话，全自动提炼破局经验与步骤，云端秒级自愈合并入库，全程无需手动复制！",
+        "voice_text": "项目完工，同样只需一句话。全自动提炼破局经验与实操步骤，云端秒级自愈合并入库，全程无需手动复制！",
         "motion_type": "push_in_crystal" # 聚焦金色代码晶体
     },
     {
@@ -118,18 +118,37 @@ def generate_subtitle_overlay(scene, out_png):
     img.save(out_png, "PNG")
 
 async def synthesize_voice(text, out_mp3):
-    """调用微软云端 Neural 超自然神经网络语音"""
+    """调用微软云端 Neural 超自然神经网络语音（云扬·沉稳专业科技男声 + 广播级电容麦混音滤镜）"""
     import edge_tts
+    raw_mp3 = out_mp3.with_suffix(".raw.mp3")
     proxies = ["http://127.0.0.1:7890", None]
+    success = False
     for p in proxies:
         try:
-            comm = edge_tts.Communicate(text, voice="zh-CN-YunxiNeural", rate="+2%", pitch="+0Hz", proxy=p)
-            await comm.save(str(out_mp3))
-            if os.path.exists(out_mp3) and os.path.getsize(out_mp3) > 1000:
-                return
+            # 采用云扬沉稳科技发布会播音音色，语速设为 -4%，节奏舒缓沉稳，极低数码机械感
+            comm = edge_tts.Communicate(text, voice="zh-CN-YunyangNeural", rate="-4%", pitch="+0Hz", proxy=p)
+            await comm.save(str(raw_mp3))
+            if os.path.exists(raw_mp3) and os.path.getsize(raw_mp3) > 1000:
+                success = True
+                break
         except Exception:
             continue
-    raise RuntimeError(f"Edge TTS 失败: {text[:20]}")
+    if not success:
+        raise RuntimeError(f"Edge TTS 失败: {text[:20]}")
+
+    # 广播级专业电容麦混音后处理：切除超低频共振、强化温暖胸腔厚度、平滑高频数码感、动态电平压限
+    audio_filter = (
+        "highpass=f=75,lowpass=f=11000,"
+        "equalizer=f=220:t=q:w=1.2:g=2.5,"
+        "equalizer=f=3200:t=q:w=1.0:g=1.2,"
+        "dynaudnorm=p=0.9:m=10"
+    )
+    subprocess.check_call(
+        f'ffmpeg -y -i "{raw_mp3}" -af "{audio_filter}" -c:a libmp3lame -b:a 192k "{out_mp3}"',
+        shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL
+    )
+    if raw_mp3.exists():
+        raw_mp3.unlink()
 
 def get_duration(file_path):
     cmd = f'ffprobe -v error -show_entries format=duration -of default=noprint_wrappers=1:nokey=1 "{file_path}"'
