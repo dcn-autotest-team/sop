@@ -1,0 +1,13 @@
+{
+  "name": "sop-hub",
+  "version": "1.0.0",
+  "description": "Cloud SOP ledger and auto-sync pipeline for AI agents",
+  "scripts": {
+    "build": "node scripts/update-index.js",
+    "merge-prs": "node scripts/auto-merge-bot.js",
+    "merge-daemon": "node scripts/auto-merge-bot.js --daemon"
+  },
+  "keywords": ["sop", "ai-agent", "automation"],
+  "author": "yanwh & AI Agent",
+  "license": "MIT"
+}

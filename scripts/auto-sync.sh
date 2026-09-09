@@ -25,6 +25,12 @@ fi
 # 4. 若无权限（403），全自动回退到 Fork -> PR 流程（绝不中断）
 echo ">>> [Auto-Fallback] 检测到无 Direct Push 权限，全自动启动 Fork -> Pull Request 流程..."
 
+# 关键防冲突：PR 分支仅提交 library/ 下的 SOP 原生资产，彻底避免并发提交导致的 sops.json 冲突
+git -C "$ROOT_DIR" reset HEAD~1 2>/dev/null || true
+git -C "$ROOT_DIR" checkout -- sops.json INDEX.md sitemap.xml llms-full.txt public/ 2>/dev/null || true
+git -C "$ROOT_DIR" add library/
+git -C "$ROOT_DIR" commit -m "$COMMIT_MSG" || true
+
 MY_USER="$(gh api user --jq .login 2>/dev/null || echo '')"
 if [ -z "$MY_USER" ]; then
     echo "[Warning] 未检测到已登录的 GitHub CLI 用户，请确保 gh auth login。"
