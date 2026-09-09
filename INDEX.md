@@ -1,7 +1,7 @@
 # SOP 知识资产总索引库 (Master Index)
 
 > 本文件由 SOP 引擎自动同步维护。每次沉淀新项目时自动追加，需要查阅时自动检索。
-> 状态：正常 | 收录总数：4 篇 | 最近更新：2026/9/4
+> 状态：正常 | 收录总数：6 篇 | 最近更新：2026/9/9
 
 ---
 
@@ -12,9 +12,9 @@
 | **大模型与智能体** | [`library/ai-agent/`](./library/ai-agent/) | 3 | LangChain, RAG, Tauri, Prompt工程, 多模态抽取 |
 | **小程序与跨端** | [`library/miniprogram/`](./library/miniprogram/) | 1 | 微信小程序, CloudBase, 移动端 |
 | **前端与交互** | [`library/frontend/`](./library/frontend/) | 0 | 标准生产实践 |
-| **后端与服务架构** | [`library/backend/`](./library/backend/) | 0 | 标准生产实践 |
+| **后端与服务架构** | [`library/backend/`](./library/backend/) | 1 | 标准生产实践 |
 | **脚本与自动化** | [`library/automation/`](./library/automation/) | 0 | 标准生产实践 |
-| **综合与系统架构** | [`library/general/`](./library/general/) | 0 | 标准生产实践 |
+| **综合与系统架构** | [`library/general/`](./library/general/) | 1 | 标准生产实践 |
 
 ---
 
@@ -40,11 +40,15 @@
 *暂无资产，等待沉淀...*
 
 ### 后端与服务架构 (`library/backend/`)
-*暂无资产，等待沉淀...*
+- **[BACKEND-001] [企业级多租户工作空间隔离与 RBAC 成员治理设计 (Go + PostgreSQL)](./library/backend/weknora-multi-tenant-rbac-sop.md)** (1 次修撰) `[多租户, RBAC, 数据隔离, 成员邀请]`
+  - **核心技术**：Go, Gin, GORM, PostgreSQL, JWT(HMAC-SHA256), tenant_members, creator_id 归属守卫
+  - **解决痛点**：SaaS/知识库产品从「单人即管理员」升级到多空间协作时，租户串数据、人人自动开个人空间、平台超管与空间 Owner 混权、最后一位 Owner 被删导致空间锁死、邀请与公开注册闸门不一致。
 
 ### 脚本与自动化 (`library/automation/`)
 *暂无资产，等待沉淀...*
 
 ### 综合与系统架构 (`library/general/`)
-*暂无资产，等待沉淀...*
+- **[GENERAL-001] [酒店 AI 多意图服务编排、工单闭环与全链路审计标准实现](./library/general/hotel-ai-service-orchestration-audit-sop.md)** (1 次修撰) `[酒店AI, 多意图编排, 工单状态机, 全链路审计]`
+  - **核心技术**：Node.js 20+, 原生 HTTP/HTML/JavaScript, PostgreSQL JSONB, WebSocket, SenseAudio ASR/S2, 高德 Web 服务, 知识库 API, node:test
+  - **解决痛点**：酒店住客的一段语音可能同时包含服务、设备、旅行和 FAQ 请求；若直接依赖单次模型输出，容易出现整句误转人工、工单越权流转、并发抢单、实时消息泄露、上游失败不可追踪及测试环境互相污染。
 

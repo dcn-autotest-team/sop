@@ -28,6 +28,12 @@ if ($LASTEXITCODE -eq 0) {
 # 4. 若无权限（403 / denied），全自动回退到 Fork -> PR 流程（绝不中断）
 Write-Host ">>> [Auto-Fallback] 检测到无 Direct Push 权限，全自动启动 Fork -> Pull Request 流程..." -ForegroundColor Yellow
 
+# 关键防冲突：PR 分支仅提交 library/ 下的 SOP 原生资产，彻底避免并发提交导致的 sops.json 冲突
+git -C "$rootDir" reset HEAD~1 2>$null
+git -C "$rootDir" checkout -- sops.json INDEX.md sitemap.xml llms-full.txt public/ 2>$null
+git -C "$rootDir" add library/
+git -C "$rootDir" commit -m "$CommitMessage"
+
 # 检查当前 gh 用户
 $myUser = (gh api user --jq .login 2>$null)
 if (!$myUser) {
