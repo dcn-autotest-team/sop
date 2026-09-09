@@ -183,6 +183,13 @@
       transition: all .15s;
     }
     .gh-link:hover { border-color: var(--ink-3); color: var(--ink); }
+    .video-nav-btn {
+      display: inline-flex; align-items: center; gap: 6px; cursor: pointer;
+      font-size: 12px; font-weight: 700; color: #fff; background: var(--seal);
+      padding: 7px 12px; border-radius: 6px; border: none; transition: all .15s;
+      box-shadow: 0 2px 6px rgba(176,58,46,.3);
+    }
+    .video-nav-btn:hover { filter: brightness(1.1); transform: translateY(-1px); }
 
     /* ---------- 动效关键帧 (Keyframes) ---------- */
     @keyframes floatBanner {
@@ -335,12 +342,13 @@
     .stat b .u { font-size: 12px; color: var(--ink-3); font-weight: 600; margin-left: 2px; }
     .stat span { font-size: 11px; color: var(--ink-3); letter-spacing: .5px; }
 
-    /* Hero 动态画卷卡片 */
+    /* Hero 动态画卷卡片与视频播放入口 */
     .hero-visual {
       position: relative; border-radius: 6px; overflow: hidden;
       border: 1px solid rgba(176,58,46,.2); background: #26221c;
       animation: floatBanner 6s ease-in-out infinite;
       box-shadow: 0 12px 30px -10px rgba(43,38,32,.25);
+      cursor: pointer;
     }
     .hero-visual img {
       width: 100%; height: 100%; display: block; object-fit: cover; aspect-ratio: 16/9;
@@ -350,7 +358,7 @@
       transform: scale(1.03);
     }
     .hero-visual-badge {
-      position: absolute; bottom: 10px; left: 10px; z-index: 2;
+      position: absolute; bottom: 10px; left: 10px; z-index: 3;
       font-size: 10px; font-weight: 700; color: #fff; background: rgba(35,30,25,.85);
       backdrop-filter: blur(6px); border: 1px solid rgba(255,255,255,.2);
       padding: 3px 8px; border-radius: 3px; display: inline-flex; align-items: center; gap: 6px;
@@ -359,6 +367,59 @@
       content: ''; width: 6px; height: 6px; border-radius: 50%; background: #22c55e;
       box-shadow: 0 0 8px #22c55e; animation: pulseGlow 2s infinite ease-in-out;
     }
+    .hero-play-btn {
+      position: absolute; inset: 0; z-index: 2; display: flex; flex-direction: column;
+      align-items: center; justify-content: center; gap: 8px;
+      background: rgba(28,24,20,.35); backdrop-filter: blur(2px);
+      color: #fff; font-size: 12px; font-weight: 700; letter-spacing: .5px;
+      transition: all .25s ease;
+    }
+    .hero-visual:hover .hero-play-btn {
+      background: rgba(28,24,20,.2);
+    }
+    .play-icon-circle {
+      width: 44px; height: 44px; border-radius: 50%; background: var(--seal);
+      display: flex; align-items: center; justify-content: center;
+      box-shadow: 0 4px 14px rgba(176,58,46,.5); transition: transform .22s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    .play-icon-circle svg { fill: #fff; margin-left: 2px; }
+    .hero-visual:hover .play-icon-circle {
+      transform: scale(1.12);
+    }
+
+    /* 视频影院弹窗 (Video Theater Modal) */
+    .video-modal-mask {
+      position: fixed; inset: 0; z-index: 100; background: rgba(15,12,10,.86);
+      backdrop-filter: blur(10px); display: none; align-items: center; justify-content: center; padding: 20px;
+    }
+    .video-modal-mask.open { display: flex; }
+    .video-modal-box {
+      width: 100%; max-width: 880px; background: #1c1815; border: 1px solid rgba(255,255,255,.16);
+      border-radius: 8px; overflow: hidden; box-shadow: 0 24px 60px -10px rgba(0,0,0,.8);
+      display: flex; flex-direction: column; animation: cardFadeInUp .3s ease;
+    }
+    .video-modal-head {
+      display: flex; align-items: center; justify-content: space-between; padding: 12px 18px;
+      background: #25201b; border-bottom: 1px solid rgba(255,255,255,.1); color: #fff;
+    }
+    .video-modal-title { font-size: 13.5px; font-weight: 700; display: flex; align-items: center; gap: 8px; font-family: var(--serif); }
+    .video-modal-title .badge { background: var(--seal); color: #fff; font-size: 10.5px; padding: 2px 6px; border-radius: 3px; }
+    .video-modal-close { background: none; border: none; color: #a89f91; cursor: pointer; font-size: 18px; line-height: 1; padding: 4px; }
+    .video-modal-close:hover { color: #fff; }
+    .video-player-wrap {
+      width: 100%; background: #000; aspect-ratio: 16/9; display: flex; align-items: center; justify-content: center;
+    }
+    .video-player-wrap video { width: 100%; height: 100%; display: block; object-fit: contain; }
+    .video-modal-foot {
+      padding: 12px 18px; background: #25201b; border-top: 1px solid rgba(255,255,255,.08);
+      display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; color: #c2b7a3; font-size: 11.5px;
+    }
+    .video-download-btn {
+      display: inline-flex; align-items: center; gap: 6px; color: #fff; background: rgba(255,255,255,.12);
+      border: 1px solid rgba(255,255,255,.2); padding: 5px 12px; border-radius: 4px; font-size: 11.5px;
+      text-decoration: none; transition: background .15s;
+    }
+    .video-download-btn:hover { background: rgba(255,255,255,.22); }
 
     /* ---------- 面板：账簿页 ---------- */
     .panel {
@@ -696,6 +757,10 @@
         </div>
       </div>
       <div class="nav-actions">
+        <button class="video-nav-btn" onclick="openVideoModal()" title="观看 1 分钟产品介绍视频">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+          <span>宣传片 (1分)</span>
+        </button>
         <a class="fde-link" href="https://fde.shenzhoukuntai.com" target="_blank" rel="noopener noreferrer" title="访问神州鲲泰 FDE 开发者平台" onclick="trackEvent('click_fde_link', { position: 'nav_header' })">
           <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
           <span>神州鲲泰 FDE</span>
@@ -739,9 +804,15 @@
           <div class="stat"><b>1<span class="u"> 句话</span></b><span>完成沉淀 / 对齐</span></div>
         </div>
       </div>
-      <div class="hero-visual" title="SOP 知识典藏与多 Agent 协同流动">
+      <div class="hero-visual" title="点击观看产品介绍视频 (1分钟)" onclick="openVideoModal()">
         <img src="./assets/sop-hero-banner.jpg" alt="AI Agent 知识典藏与协同流动链路图" loading="lazy">
         <div class="hero-visual-badge">AI Agent 知识库流动已就绪</div>
+        <div class="hero-play-btn">
+          <div class="play-icon-circle">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+          </div>
+          <span>点击观看 1 分钟产品介绍片</span>
+        </div>
       </div>
     </section>
 
@@ -840,6 +911,32 @@
     </div>
     <div>SOP 誊录馆 · 由 AGENTS_SOP 引擎自动维护 · <a href="https://github.com/dcn-autotest-team/sop" target="_blank" onclick="trackEvent('click_github_repo_footer')">dcn-autotest-team/sop</a></div>
   </footer>
+
+  <!-- 产品介绍视频弹窗 (Video Theater) -->
+  <div class="video-modal-mask" id="videoModal" onclick="if(event.target===this)closeVideoModal()">
+    <div class="video-modal-box">
+      <div class="video-modal-head">
+        <div class="video-modal-title">
+          <span class="badge">产品演示</span>
+          <span>SOP 誊录馆 · 1 分钟全景介绍与协同范式</span>
+        </div>
+        <button class="video-modal-close" onclick="closeVideoModal()" title="关闭">✕</button>
+      </div>
+      <div class="video-player-wrap">
+        <video id="productVideo" controls preload="metadata" playsinline poster="./assets/sop-hero-banner.jpg">
+          <source src="./assets/sop-product-intro.mp4" type="video/mp4">
+          您的浏览器暂不支持视频播放。
+        </video>
+      </div>
+      <div class="video-modal-foot">
+        <div>分幕：破局返工困境 → 极简开工对齐 → 完工自动归档 → 产业智算赋能 → 人机协同新范式</div>
+        <a href="./assets/sop-product-intro.mp4" download="SOP-誊录馆-产品介绍.mp4" class="video-download-btn" onclick="trackEvent('download_product_video')">
+          <svg width="13" height="13" viewBox="0 0 16 16" fill="currentColor"><path d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5z"/><path d="M7.646 11.854a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293V1.5a.5.5 0 0 0-1 0v8.793L5.354 8.146a.5.5 0 1 0-.708.708l3 3z"/></svg>
+          <span>下载 MP4 原片</span>
+        </a>
+      </div>
+    </div>
+  </div>
 
   <!-- 详情弹窗（支持规约正文与演进时间线双视图） -->
   <div class="modal-mask" id="detailModal" onclick="if(event.target===this)closeDetailModal()">
@@ -1206,7 +1303,36 @@
         trackEvent('copy_agents_md', { sop_id: sop.id, sop_title: sop.title, source: 'card' });
       }
     }
-    document.addEventListener('keydown', e => { if (e.key === 'Escape') closeDetailModal(); });
+
+    /* ---- 视频播放弹窗控制 ---- */
+    function openVideoModal() {
+      const modal = document.getElementById('videoModal');
+      const video = document.getElementById('productVideo');
+      if (modal && video) {
+        modal.classList.add('open');
+        video.currentTime = 0;
+        video.play().catch(() => {});
+        document.body.style.overflow = 'hidden';
+        trackEvent('view_product_video');
+      }
+    }
+
+    function closeVideoModal() {
+      const modal = document.getElementById('videoModal');
+      const video = document.getElementById('productVideo');
+      if (modal && video) {
+        modal.classList.remove('open');
+        video.pause();
+        document.body.style.overflow = '';
+      }
+    }
+
+    document.addEventListener('keydown', e => {
+      if (e.key === 'Escape') {
+        closeDetailModal();
+        closeVideoModal();
+      }
+    });
 
     fetchSopsFromGithub();
   </script>
