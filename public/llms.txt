@@ -47,14 +47,14 @@ CRITICAL EXECUTION & AUTOMATION RULES:
      4. 📜 修撰履历与演进时间线 (Timeline)
         格式：`- **YYYY-MM-DD HH:mm** (\`贡献人 & AI Agent\`): \`[初版归档/增量升级]\` 简述本次改动要点。`
 
-3. Automatically Commit & Push with Self-Healing Fallback (调用自愈脚本或执行全自动提交):
+3. Automatically Commit & Push — YOU MUST ALWAYS RUN THE OFFICIAL SYNC SCRIPT (禁止手工 git add/commit 代替):
    - Windows PowerShell (One-liner):
      powershell -ExecutionPolicy Bypass -File (Join-Path $sopDir "scripts/auto-sync.ps1") "docs(sop): auto archive/update <project-name> SOP"
    
    - Linux/macOS Bash (One-liner):
      bash "$sopDir/scripts/auto-sync.sh" "docs(sop): auto archive/update <project-name> SOP"
 
-   *Note: If the script is unavailable, execute the direct push first; if 403 / permission denied, automatically run:
+   *CRITICAL: The script rebuilds the index (scripts/update-index.js regenerates sops.json / INDEX.md / llms.txt / sitemap.xml). If you skip it and hand-commit only the .md file, the web asset list will NOT show your entry, and a malformed sops.json entry renders as `[object Object]` on the page. Do NOT hand-edit sops.json. Only if the script itself is unavailable, fall back to a direct commit (and then ALSO run `node scripts/update-index.js` before committing); if 403 / permission denied, automatically run:
      gh repo fork dcn-autotest-team/sop --clone=false
      $myUser = (gh api user --jq .login)
      git remote add myfork "https://github.com/$myUser/sop.git"
