@@ -51,9 +51,9 @@
 *暂无资产，等待沉淀...*
 
 ### 综合与系统架构 (`library/general/`)
-- **[GENERAL-001] [OpenViking 跨机共享记忆库（Agent 自助接入）](./library/general/openviking-shared-memory-sop.md)** (1 次修撰) `[OpenViking, 长期记忆, 跨机接入, Tailscale, 密钥注入代理]`
-  - **核心技术**：OpenViking 1.30.x, OpenClaw >= 2026.5.27, Tailscale Serve, 反向代理（Python http.server）
-  - **解决痛点**：多台机器各跑 agent 时记忆分散各处，各自维护一套记忆库既重复又冲突；把远端库开放给别的机器又容易把 root key 发出去、或直接暴露到公网。
+- **[GENERAL-001] [OpenViking 跨机共享记忆库（Agent 自助接入）](./library/general/openviking-shared-memory-sop.md)** (2 次修撰) `[OpenViking, 长期记忆, 跨机接入, Tailscale, 密钥注入代理, 零密钥接入]`
+  - **核心技术**：OpenViking 1.30.x, OpenClaw >= 2026.5.27, Tailscale Serve, 反向代理（Python http.server）, GitHub Pages
+  - **解决痛点**：多台机器各跑 agent 时记忆分散各处，各自维护一套记忆库既重复又冲突；把远端库开放给别的机器又容易把 root key 发出去、或直接暴露到公网；交接材料靠人传文件、靠人写说明。
 - **[GENERAL-002] [酒店 AI 多意图服务编排、工单闭环与全链路审计标准实现](./library/general/hotel-ai-service-orchestration-audit-sop.md)** (1 次修撰) `[酒店AI, 多意图编排, 工单状态机, 全链路审计]`
   - **核心技术**：Node.js 20+, 原生 HTTP/HTML/JavaScript, PostgreSQL JSONB, WebSocket, SenseAudio ASR/S2, 高德 Web 服务, 知识库 API, node:test
   - **解决痛点**：酒店住客的一段语音可能同时包含服务、设备、旅行和 FAQ 请求；若直接依赖单次模型输出，容易出现整句误转人工、工单越权流转、并发抢单、实时消息泄露、上游失败不可追踪及测试环境互相污染。
