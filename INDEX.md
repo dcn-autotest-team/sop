@@ -1,7 +1,7 @@
 # SOP 知识资产总索引库 (Master Index)
 
 > 本文件由 SOP 引擎自动同步维护。每次沉淀新项目时自动追加，需要查阅时自动检索。
-> 状态：正常 | 收录总数：7 篇 | 最近更新：2026/11/2
+> 状态：正常 | 收录总数：8 篇 | 最近更新：2026/11/4
 
 ---
 
@@ -14,7 +14,7 @@
 | **前端与交互** | [`library/frontend/`](./library/frontend/) | 0 | 标准生产实践 |
 | **后端与服务架构** | [`library/backend/`](./library/backend/) | 1 | 标准生产实践 |
 | **脚本与自动化** | [`library/automation/`](./library/automation/) | 0 | 标准生产实践 |
-| **综合与系统架构** | [`library/general/`](./library/general/) | 1 | 标准生产实践 |
+| **综合与系统架构** | [`library/general/`](./library/general/) | 2 | 标准生产实践 |
 
 ---
 
@@ -54,4 +54,7 @@
 - **[GENERAL-001] [酒店 AI 多意图服务编排、工单闭环与全链路审计标准实现](./library/general/hotel-ai-service-orchestration-audit-sop.md)** (1 次修撰) `[酒店AI, 多意图编排, 工单状态机, 全链路审计]`
   - **核心技术**：Node.js 20+, 原生 HTTP/HTML/JavaScript, PostgreSQL JSONB, WebSocket, SenseAudio ASR/S2, 高德 Web 服务, 知识库 API, node:test
   - **解决痛点**：酒店住客的一段语音可能同时包含服务、设备、旅行和 FAQ 请求；若直接依赖单次模型输出，容易出现整句误转人工、工单越权流转、并发抢单、实时消息泄露、上游失败不可追踪及测试环境互相污染。
+- **[GENERAL-002] [openviking-shared-memory-sop.md](./library/general/openviking-shared-memory-sop.md)** (1 次修撰) `[OpenViking, 长期记忆, 跨机接入, Tailscale, 密钥注入代理]`
+  - **核心技术**：OpenViking 1.30.x, OpenClaw >= 2026.5.27, Tailscale Serve, 反向代理（Python http.server）
+  - **解决痛点**：多台机器各跑 agent 时记忆分散各处，各自维护一套记忆库既重复又冲突；把远端库开放给别的机器又容易把 root key 发出去、或直接暴露到公网。
 
