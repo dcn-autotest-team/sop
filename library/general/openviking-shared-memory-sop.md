@@ -1,4 +1,4 @@
-﻿# SOP: OpenViking 跨机共享记忆库（Agent 自助接入）
+# SOP: OpenViking 跨机共享记忆库（Agent 自助接入）
 
 > **编号**: SOP-GENERAL-002
 > **分类**: 综合与系统架构 (`general`)
