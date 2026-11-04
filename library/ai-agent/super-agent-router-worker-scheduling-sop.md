@@ -84,4 +84,4 @@ Router-Worker 通信载体：IM 群组（钉钉/飞书/微信/Slack 均可）或
 
 ## 4. 📜 修撰履历与演进时间线 (Timeline)
 
-- **2026-11-02 20:31** (`严文会 & OpenClaw Router`): `[初版归档]` 从 Dauto 终端 AI 化项目两天实战提炼：三层架构 + 4 工具 + 交接手册 + 9 条踩坑。理论依据：DeepSeek Harness《Super-agent 设计探索》（双层架构/事件驱动/Thread/Inline-Spill/存算分离/Watchdog）+ yetone 三循环工作流。
+- **2026-11-02 20:31** (`Dauto 项目团队 & OpenClaw Router`): `[初版归档]` 从 Dauto 终端 AI 化项目两天实战提炼：三层架构 + 4 工具 + 交接手册 + 9 条踩坑。理论依据：DeepSeek Harness《Super-agent 设计探索》（双层架构/事件驱动/Thread/Inline-Spill/存算分离/Watchdog）+ yetone 三循环工作流。

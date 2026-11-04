@@ -1,5 +1,32 @@
 [
   {
+    "id": "ai-agent-super-agent-router-worker-scheduling-sop",
+    "category": "ai-agent",
+    "filename": "super-agent-router-worker-scheduling-sop.md",
+    "relPath": "library/ai-agent/super-agent-router-worker-scheduling-sop.md",
+    "title": "Super-agent 三层协作调度（Router-Worker-记忆层）",
+    "tech": "任意 agent 框架（OpenClaw/Hermes/Claude Code 等）+ IM 群组 + 云端记忆库（如 OpenViking/SQLite）+ 通用巡检工具",
+    "tags": [
+      "[多Agent协作",
+      "Super-agent",
+      "Router-Worker",
+      "看门狗Watchdog",
+      "记忆共享",
+      "换人接管]"
+    ],
+    "pain": "多 agent 协作时任务派发靠人工转贴、agent 卡死无人管、换人/换窗口后上下文全丢、记忆散落各 agent 身上无法共享",
+    "content": "# SOP: Super-agent 三层协作调度（Router-Worker-记忆层）\r\n\r\n> **编号**: SOP-AI-AGENT-001\r\n> **分类**: ai-agent (`ai-agent`)\r\n> **标签**: [多Agent协作, Super-agent, Router-Worker, 看门狗Watchdog, 记忆共享, 换人接管]\r\n> **核心栈**: 任意 agent 框架（OpenClaw/Hermes/Claude Code 等）+ IM 群组 + 云端记忆库（如 OpenViking/SQLite）+ 通用巡检工具\r\n> **解决痛点**: 多 agent 协作时任务派发靠人工转贴、agent 卡死无人管、换人/换窗口后上下文全丢、记忆散落各 agent 身上无法共享\r\n\r\n## 1. 从 0 到 1 标准执行路径（4 步内 MVP）\r\n\r\n### 第 1 步：搭三层架构\r\n\r\n- **第一层 人类**：只做提需求、看验收、拍方向。人只面对一个 Router，不关心背后几个 Worker。\r\n- **第二层 Router（主协调 Agent）**：只分派不干活、接住所有入口、记住全局。用轻量模型即可（速度+效果兼顾）。\r\n- **第三层 Worker（执行 Agents）**：各自上下文隔离、挂完整工具、用能力最强的模型，专注单一任务。**Worker 间不互相通信**。\r\n- **记忆层**：独立于任何 agent 的云端记忆库（推荐 OpenViking / SQLite），沉淀决策/问题台账/验收记录/踩坑，并通过 hook（如 pre_llm_call）自动注入相关记忆给所有 agent。\r\n\r\nRouter-Worker 通信载体：IM 群组（钉钉/飞书/微信/Slack 均可）或任务队列。群组 ID/凭据等私有信息**不由 SOP 携带**，由接手的 agent 在接管步骤中向用户询问或通过渠道 API 自行发现。\r\n\r\n### 第 2 步：配齐 Router 巡检工具（4 个通用工具即可）\r\n\r\n1. **派工工具**：向群组/队列发任务消息（@对应 Worker + 任务描述 + 参考资料位置）\r\n2. **判活工具**：读群消息/队列，计算每个 Worker 的最后活动时间\r\n3. **判卡死工具**：检查每个 Worker 的当前任务 running 时长（阈值建议 15 分钟），并支持读取队列明细\r\n4. **中断工具**：强制中断卡死的任务，让 Worker 用新会话恢复\r\n\r\n参考实现（Node/Python 混合，通用可改造）：`gc_send.mjs`（发+@）、`gc_watch.py`（判活）、`gc_detail.py`（判卡死）、`gc_ctl.mjs`（中断）。核心逻辑分别约 100-150 行，见下方\"铁律\"中的实现要点。\r\n\r\n### 第 3 步：立 Router 的 SOP（七条标准动作）\r\n\r\n1. **接需求**：人类一句话 → 拆成带 DoD 的小任务。**一轮只派一件小而完整的事**（大任务拆步，每步一轮可验收）。\r\n2. **派工**：发群 + @对应 Worker + 附上源码/参考资料位置。\r\n3. **巡检**：每 10 分钟判活一次；running 超阈值即判卡死。\r\n4. **干预**：卡死 → 中断 → 重派（拆更小）或换人；同文件冲突 → Router 仲裁文件归属（每个文件归属一个 Worker，不并行改）。\r\n5. **验收**：Worker 自验（探针/测试全过）+ 截图 → Router 复核 → 请人类验收。\r\n6. **沉淀**：每个大节点（一轮收口/验收/踩坑）把决策、问题、验收记录写入记忆层。\r\n7. **通知**：大节点主动通知人类。选定一个支持主动推送的通知渠道（IM 私聊/邮件/Webhook 均可），并在启用前做一次投递连通性验证（发送一条测试消息并确认收到）。\r\n\r\n### 第 4 步：建立交接机制（换人不丢架构）\r\n\r\n写一份《Router 交接手册》存入记忆层，任何 agent 读它即可接管。手册七节：\r\n\r\n1. 身份与职责（Router 只分派不干活；Worker 用最强模型）\r\n2. 接管步骤（读记忆 → 读群/队列 → 读仓库进度 → 认领工具 → 通知用户）\r\n3. 标准 SOP（上述七条）\r\n4. 文件归属仲裁表（每个文件归属一个 Worker，防冲突）\r\n5. 记忆共享协议（大节点必写、接管时检索、hook 自动注入）\r\n6. 已知坑清单（见下方铁律）\r\n7. 升级路径（二期/三期规划）\r\n\r\n私有信息（群 ID、凭据、openid）**不写入手册**，手册里写\"接管时向用户询问\"。\r\n\r\n## 2. 踩坑与返工自查清单\r\n\r\n- [ ] **派大活必拆步**：单个 agent 一口气干到底会撞迭代上限（实测：19 轮工具调用 / 3.6M token 后空转，只输出 \"reached iteration limit\"）\r\n- [ ] **空转检测**：进程活着 ≠ 在干活。LLM 内部循环死锁/偏航（只吐上限提示、输出与任务无关）需要\"任务是否在往前走\"级别的看门狗，不是探活脚本\r\n- [ ] **静态资源变更不得触发服务重启**：改前端文件重启网关会杀掉所有用户的终端/长连接（实测连坐 7 次）\r\n- [ ] **浮层/弹窗组件必须走主题变量**：硬编码颜色会与全局主题脱节（同类问题反复出现），纳入 WCAG 对比度探针进门禁\r\n- [ ] **通知去重**：同一事件只展示一次（顶部条一次+入箱一条）；过程类提示只入箱不弹顶部条；状态层互斥渲染（错误>恢复>发送）\r\n- [ ] **通知渠道需先验证连通性**：不同 IM 的\"主动推送\"与\"会话回复\"可能是两条不同的投递路径，能力不一致。选定的通知渠道在启用前先发一条测试消息确认可达，避免\"以为发了其实没到\"\r\n- [ ] **群组握手协议**：某些平台带 inviteCode 握手会降级为访客失去管理权，用 token+用户身份握手\r\n- [ ] **人类反馈逐条入台账**：防遗漏，台账本身是第一份沉淀资产\r\n- [ ] **同文件不并行改**：先记录 git status 基线，改完各自跑门禁\r\n\r\n## 3. 面向 AI 的系统铁律 (Never do / Always do)\r\n\r\n**Never do**\r\n\r\n- Never 给单个 agent 派\"一口气干到底\"的大任务（拆步，每步一轮）\r\n- Never 让 Worker 之间直接互相通信（一切经 Router 协调）\r\n- Never 在改动静态资源时重启承载长连接的服务\r\n- Never 用浏览器原生 select/form 控件做产品 UI（样式不可控）\r\n- Never 口头承诺\"稍后同步你\"而不实际执行通知\r\n- Never 把群 ID/凭据/openid 等私有信息写进可分发的 SOP/交接文档（由接手 agent 向用户询问）\r\n\r\n**Always do**\r\n\r\n- Always 每轮只交一件小而完整、可验收的事\r\n- Always 用探针/测试全过作为\"完成\"标准，不接受口头\"已完成\"\r\n- Always 在大节点把决策/踩坑写进记忆层（这是跨 agent 的共享资产）\r\n- Always 卡死后记录根因，把教训写进记忆防重复踩\r\n- Always 先建 before 基线（截图/探针）再修 bug，修后对比验收\r\n- Always 换人接管时先读交接手册 + 检索记忆，再接手调度\r\n\r\n## 4. 📜 修撰履历与演进时间线 (Timeline)\r\n\r\n- **2026-11-02 20:31** (`Dauto 项目团队 & OpenClaw Router`): `[初版归档]` 从 Dauto 终端 AI 化项目两天实战提炼：三层架构 + 4 工具 + 交接手册 + 9 条踩坑。理论依据：DeepSeek Harness《Super-agent 设计探索》（双层架构/事件驱动/Thread/Inline-Spill/存算分离/Watchdog）+ yetone 三循环工作流。\r\n",
+    "timeline": [
+      {
+        "date": "2026-11-02 20:31",
+        "author": "Dauto 项目团队 & OpenClaw Router",
+        "tag": "初版归档",
+        "desc": "从 Dauto 终端 AI 化项目两天实战提炼：三层架构 + 4 工具 + 交接手册 + 9 条踩坑。理论依据：DeepSeek Harness《Super-agent 设计探索》（双层架构/事件驱动/Thread/Inline-Spill/存算分离/Watchdog）+ yetone 三循环工作流。"
+      }
+    ],
+    "updatedAt": "2026-11-04T13:51:17.810Z"
+  },
+  {
     "id": "general-openviking-shared-memory-sop",
     "category": "general",
     "filename": "openviking-shared-memory-sop.md",
@@ -107,33 +134,6 @@
       }
     ],
     "updatedAt": "2026-11-04T12:28:54.902Z"
-  },
-  {
-    "id": "ai-agent-super-agent-router-worker-scheduling-sop",
-    "category": "ai-agent",
-    "filename": "super-agent-router-worker-scheduling-sop.md",
-    "relPath": "library/ai-agent/super-agent-router-worker-scheduling-sop.md",
-    "title": "Super-agent 三层协作调度（Router-Worker-记忆层）",
-    "tech": "任意 agent 框架（OpenClaw/Hermes/Claude Code 等）+ IM 群组 + 云端记忆库（如 OpenViking/SQLite）+ 通用巡检工具",
-    "tags": [
-      "[多Agent协作",
-      "Super-agent",
-      "Router-Worker",
-      "看门狗Watchdog",
-      "记忆共享",
-      "换人接管]"
-    ],
-    "pain": "多 agent 协作时任务派发靠人工转贴、agent 卡死无人管、换人/换窗口后上下文全丢、记忆散落各 agent 身上无法共享",
-    "content": "# SOP: Super-agent 三层协作调度（Router-Worker-记忆层）\r\n\r\n> **编号**: SOP-AI-AGENT-001\r\n> **分类**: ai-agent (`ai-agent`)\r\n> **标签**: [多Agent协作, Super-agent, Router-Worker, 看门狗Watchdog, 记忆共享, 换人接管]\r\n> **核心栈**: 任意 agent 框架（OpenClaw/Hermes/Claude Code 等）+ IM 群组 + 云端记忆库（如 OpenViking/SQLite）+ 通用巡检工具\r\n> **解决痛点**: 多 agent 协作时任务派发靠人工转贴、agent 卡死无人管、换人/换窗口后上下文全丢、记忆散落各 agent 身上无法共享\r\n\r\n## 1. 从 0 到 1 标准执行路径（4 步内 MVP）\r\n\r\n### 第 1 步：搭三层架构\r\n\r\n- **第一层 人类**：只做提需求、看验收、拍方向。人只面对一个 Router，不关心背后几个 Worker。\r\n- **第二层 Router（主协调 Agent）**：只分派不干活、接住所有入口、记住全局。用轻量模型即可（速度+效果兼顾）。\r\n- **第三层 Worker（执行 Agents）**：各自上下文隔离、挂完整工具、用能力最强的模型，专注单一任务。**Worker 间不互相通信**。\r\n- **记忆层**：独立于任何 agent 的云端记忆库（推荐 OpenViking / SQLite），沉淀决策/问题台账/验收记录/踩坑，并通过 hook（如 pre_llm_call）自动注入相关记忆给所有 agent。\r\n\r\nRouter-Worker 通信载体：IM 群组（钉钉/飞书/微信/Slack 均可）或任务队列。群组 ID/凭据等私有信息**不由 SOP 携带**，由接手的 agent 在接管步骤中向用户询问或通过渠道 API 自行发现。\r\n\r\n### 第 2 步：配齐 Router 巡检工具（4 个通用工具即可）\r\n\r\n1. **派工工具**：向群组/队列发任务消息（@对应 Worker + 任务描述 + 参考资料位置）\r\n2. **判活工具**：读群消息/队列，计算每个 Worker 的最后活动时间\r\n3. **判卡死工具**：检查每个 Worker 的当前任务 running 时长（阈值建议 15 分钟），并支持读取队列明细\r\n4. **中断工具**：强制中断卡死的任务，让 Worker 用新会话恢复\r\n\r\n参考实现（Node/Python 混合，通用可改造）：`gc_send.mjs`（发+@）、`gc_watch.py`（判活）、`gc_detail.py`（判卡死）、`gc_ctl.mjs`（中断）。核心逻辑分别约 100-150 行，见下方\"铁律\"中的实现要点。\r\n\r\n### 第 3 步：立 Router 的 SOP（七条标准动作）\r\n\r\n1. **接需求**：人类一句话 → 拆成带 DoD 的小任务。**一轮只派一件小而完整的事**（大任务拆步，每步一轮可验收）。\r\n2. **派工**：发群 + @对应 Worker + 附上源码/参考资料位置。\r\n3. **巡检**：每 10 分钟判活一次；running 超阈值即判卡死。\r\n4. **干预**：卡死 → 中断 → 重派（拆更小）或换人；同文件冲突 → Router 仲裁文件归属（每个文件归属一个 Worker，不并行改）。\r\n5. **验收**：Worker 自验（探针/测试全过）+ 截图 → Router 复核 → 请人类验收。\r\n6. **沉淀**：每个大节点（一轮收口/验收/踩坑）把决策、问题、验收记录写入记忆层。\r\n7. **通知**：大节点主动通知人类。选定一个支持主动推送的通知渠道（IM 私聊/邮件/Webhook 均可），并在启用前做一次投递连通性验证（发送一条测试消息并确认收到）。\r\n\r\n### 第 4 步：建立交接机制（换人不丢架构）\r\n\r\n写一份《Router 交接手册》存入记忆层，任何 agent 读它即可接管。手册七节：\r\n\r\n1. 身份与职责（Router 只分派不干活；Worker 用最强模型）\r\n2. 接管步骤（读记忆 → 读群/队列 → 读仓库进度 → 认领工具 → 通知用户）\r\n3. 标准 SOP（上述七条）\r\n4. 文件归属仲裁表（每个文件归属一个 Worker，防冲突）\r\n5. 记忆共享协议（大节点必写、接管时检索、hook 自动注入）\r\n6. 已知坑清单（见下方铁律）\r\n7. 升级路径（二期/三期规划）\r\n\r\n私有信息（群 ID、凭据、openid）**不写入手册**，手册里写\"接管时向用户询问\"。\r\n\r\n## 2. 踩坑与返工自查清单\r\n\r\n- [ ] **派大活必拆步**：单个 agent 一口气干到底会撞迭代上限（实测：19 轮工具调用 / 3.6M token 后空转，只输出 \"reached iteration limit\"）\r\n- [ ] **空转检测**：进程活着 ≠ 在干活。LLM 内部循环死锁/偏航（只吐上限提示、输出与任务无关）需要\"任务是否在往前走\"级别的看门狗，不是探活脚本\r\n- [ ] **静态资源变更不得触发服务重启**：改前端文件重启网关会杀掉所有用户的终端/长连接（实测连坐 7 次）\r\n- [ ] **浮层/弹窗组件必须走主题变量**：硬编码颜色会与全局主题脱节（同类问题反复出现），纳入 WCAG 对比度探针进门禁\r\n- [ ] **通知去重**：同一事件只展示一次（顶部条一次+入箱一条）；过程类提示只入箱不弹顶部条；状态层互斥渲染（错误>恢复>发送）\r\n- [ ] **通知渠道需先验证连通性**：不同 IM 的\"主动推送\"与\"会话回复\"可能是两条不同的投递路径，能力不一致。选定的通知渠道在启用前先发一条测试消息确认可达，避免\"以为发了其实没到\"\r\n- [ ] **群组握手协议**：某些平台带 inviteCode 握手会降级为访客失去管理权，用 token+用户身份握手\r\n- [ ] **人类反馈逐条入台账**：防遗漏，台账本身是第一份沉淀资产\r\n- [ ] **同文件不并行改**：先记录 git status 基线，改完各自跑门禁\r\n\r\n## 3. 面向 AI 的系统铁律 (Never do / Always do)\r\n\r\n**Never do**\r\n\r\n- Never 给单个 agent 派\"一口气干到底\"的大任务（拆步，每步一轮）\r\n- Never 让 Worker 之间直接互相通信（一切经 Router 协调）\r\n- Never 在改动静态资源时重启承载长连接的服务\r\n- Never 用浏览器原生 select/form 控件做产品 UI（样式不可控）\r\n- Never 口头承诺\"稍后同步你\"而不实际执行通知\r\n- Never 把群 ID/凭据/openid 等私有信息写进可分发的 SOP/交接文档（由接手 agent 向用户询问）\r\n\r\n**Always do**\r\n\r\n- Always 每轮只交一件小而完整、可验收的事\r\n- Always 用探针/测试全过作为\"完成\"标准，不接受口头\"已完成\"\r\n- Always 在大节点把决策/踩坑写进记忆层（这是跨 agent 的共享资产）\r\n- Always 卡死后记录根因，把教训写进记忆防重复踩\r\n- Always 先建 before 基线（截图/探针）再修 bug，修后对比验收\r\n- Always 换人接管时先读交接手册 + 检索记忆，再接手调度\r\n\r\n## 4. 📜 修撰履历与演进时间线 (Timeline)\r\n\r\n- **2026-11-02 20:31** (`严文会 & OpenClaw Router`): `[初版归档]` 从 Dauto 终端 AI 化项目两天实战提炼：三层架构 + 4 工具 + 交接手册 + 9 条踩坑。理论依据：DeepSeek Harness《Super-agent 设计探索》（双层架构/事件驱动/Thread/Inline-Spill/存算分离/Watchdog）+ yetone 三循环工作流。\r\n",
-    "timeline": [
-      {
-        "date": "2026-11-02 20:31",
-        "author": "严文会 & OpenClaw Router",
-        "tag": "初版归档",
-        "desc": "从 Dauto 终端 AI 化项目两天实战提炼：三层架构 + 4 工具 + 交接手册 + 9 条踩坑。理论依据：DeepSeek Harness《Super-agent 设计探索》（双层架构/事件驱动/Thread/Inline-Spill/存算分离/Watchdog）+ yetone 三循环工作流。"
-      }
-    ],
-    "updatedAt": "2026-11-04T12:28:54.900Z"
   },
   {
     "id": "ai-agent-rag-knowledge-base-pipeline",
